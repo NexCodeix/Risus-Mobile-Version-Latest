@@ -3,7 +3,6 @@ import {
     ActivityIndicator,
     Text,
     TouchableOpacity,
-    ViewStyle,
 } from "react-native";
 
 /* ================= TYPES ================= */
@@ -13,7 +12,7 @@ type AppButtonProps = {
     onPress: () => void;             // Action handler
     loading?: boolean;               // Show spinner
     disabled?: boolean;              // Disable button
-    style?: ViewStyle;               // Optional container style
+    className?: string;       // Optional container style
 };
 
 /* ================= COMPONENT ================= */
@@ -23,7 +22,7 @@ export default function AppButton({
     onPress,
     loading = false,
     disabled = false,
-    style,
+    className,
 }: AppButtonProps) {
     const isDisabled = disabled || loading;
 
@@ -32,7 +31,7 @@ export default function AppButton({
             activeOpacity={0.8}
             onPress={onPress}
             disabled={isDisabled}
-            className={`bg-primary py-3 px-5 rounded-lg ${isDisabled ? "text-text-muted" : "text-text-primary"} ${style}`}
+            className={`bg-primary py-3 px-5 rounded-lg ${isDisabled ? "text-text-muted" : "text-text-primary"} ${className}`}
         >
             {loading ? (
                 <ActivityIndicator color="black" />

@@ -11,9 +11,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 /* ================= TYPES ================= */
 
 type AppScreenProps = {
-  children: ReactNode;
+  children?: ReactNode;
   backgroundColor?: string;
-  style?: ViewStyle;
+  className?: string;
   statusBarStyle?: "light" | "dark";
 };
 
@@ -22,7 +22,7 @@ type AppScreenProps = {
 export default function AppScreen({
   children,
   backgroundColor = "#FFFFFF",
-  style,
+  className,
   statusBarStyle = "dark",
 }: AppScreenProps) {
   const insets = useSafeAreaInsets();
@@ -36,7 +36,7 @@ export default function AppScreen({
             backgroundColor,
             paddingTop: insets.top,
           },
-          style,
+          className,
         ]}
       >
         <StatusBar

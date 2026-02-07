@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type AppKeyboardAvoidingViewProps = {
   children: ReactNode;
-  style?: string;
+  className?: string;
   extraOffset?: number;
 };
 
@@ -14,14 +14,14 @@ type AppKeyboardAvoidingViewProps = {
 
 export default function AppKeyboardAvoidingView({
   children,
-  style,
+  className,
   extraOffset = 0,
 }: AppKeyboardAvoidingViewProps) {
   const insets = useSafeAreaInsets();
 
   return (
     <KeyboardAvoidingView
-      className={`flex-1 ${style}`}
+      className={`flex-1 ${className}`}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={insets.top + extraOffset}
     >
