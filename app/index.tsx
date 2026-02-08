@@ -1,6 +1,7 @@
 import AppButton from "@/components/ui/AppButton";
 import AppScreen from "@/components/ui/AppScreen";
 import { AppToast } from "@/components/ui/AppToast";
+import { router } from "expo-router";
 import { Text, View } from "react-native";
 
 export default function Index() {
@@ -23,6 +24,16 @@ export default function Index() {
         />
         <AppButton
           title="Info Toast"
+          className={"bg-black"}
+          onPress={() => AppToast.info({ title: "Info", description: "This is info toast" })}
+        />
+        <AppButton
+          title="Login"
+          className={"bg-black"}
+          onPress={() => router.replace("/(auth)/signin")}
+        />
+        <AppButton
+          title="Logout"
           className={"bg-black"}
           onPress={() => AppToast.info({ title: "Info", description: "This is info toast" })}
         />

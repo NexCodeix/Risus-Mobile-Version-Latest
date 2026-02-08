@@ -1,23 +1,23 @@
-import { createMMKV } from 'react-native-mmkv'
+import {createMMKV} from 'react-native-mmkv'
 
 export const storage = createMMKV({
-  id: "risus-storage",
-  encryptionKey: process.env.MMKV_KEY,
-});
+  id: 'risus-storage',
+  encryptionKey: process.env.MMKV_KEY
+})
 
-/* Helpers (typed & clean) */
+/* Token Keys */
+const ACCESS = 'access_token'
 
-export const setAccessToken = (token: string) =>
-  storage.set("access_token", token);
+/* Helpers */
 
-export const getAccessToken = () => storage.getString("access_token");
+export const setToken = (access: string) => {
+  storage.set(ACCESS, access)
+}
 
-export const setRefreshToken = (token: string) =>
-  storage.set("refresh_token", token);
-
-export const getRefreshToken = () => storage.getString("refresh_token");
+export const getTokens = () => ({
+  accessToken: storage.getString(ACCESS) ?? null
+})
 
 export const clearTokens = () => {
-  storage.remove("access_token");
-  storage.remove("refresh_token");
-};
+  storage.remove(ACCESS)
+}
