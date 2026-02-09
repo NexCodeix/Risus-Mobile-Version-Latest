@@ -1,31 +1,25 @@
-import React, { ReactNode } from "react";
-import {
-  Keyboard,
-  StatusBar,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import React, {ReactNode} from 'react'
+import {Keyboard, StatusBar, TouchableWithoutFeedback, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 /* ================= TYPES ================= */
 
 type AppScreenProps = {
-  children?: ReactNode;
-  backgroundColor?: string;
-  className?: string;
-  statusBarStyle?: "light" | "dark";
-};
+  children?: ReactNode
+  backgroundColor?: string
+  className?: string
+  statusBarStyle?: 'light' | 'dark'
+}
 
 /* ================= COMPONENT ================= */
 
 export default function AppScreen({
   children,
-  backgroundColor = "#FFFFFF",
+  backgroundColor = '#FFFFFF',
   className,
-  statusBarStyle = "dark",
+  statusBarStyle = 'dark'
 }: AppScreenProps) {
-  const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets()
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -34,20 +28,22 @@ export default function AppScreen({
           {
             flex: 1,
             backgroundColor,
-            paddingTop: insets.top,
+            paddingTop: insets.top
           },
-          className,
+          className
         ]}
       >
         <StatusBar
-          barStyle={statusBarStyle === "dark" ? "dark-content" : "light-content"}
+          barStyle={
+            statusBarStyle === 'dark' ? 'dark-content' : 'light-content'
+          }
           backgroundColor={backgroundColor}
         />
 
         {children}
       </View>
     </TouchableWithoutFeedback>
-  );
+  )
 }
 
 /* =====================================================

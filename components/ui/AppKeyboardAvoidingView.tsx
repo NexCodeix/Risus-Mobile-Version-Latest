@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { KeyboardAvoidingView, Platform, ViewStyle } from "react-native";
+import { KeyboardAvoidingView, Platform, } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /* ================= TYPES ================= */

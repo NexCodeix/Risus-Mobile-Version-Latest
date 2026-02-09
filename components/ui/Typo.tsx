@@ -7,7 +7,7 @@ const Typo = ({ size = 16, children, className, style, textProps }: TypoProps) =
   return (
     <Text
       {...textProps}
-      className={clsx('font-anek-regular', className)}
+      className={clsx('', className)}
       style={[
         {
           fontSize: verticalScale(size),
