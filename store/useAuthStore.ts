@@ -6,63 +6,40 @@ import {useUserStore} from './useUserStore'
 type AuthState = {
   accessToken: string | null
   isHydrated: boolean
-  isAuthenticated: boolean
-  isLoading: boolean
 
   hydrate: () => void
   login: (token: string) => void
   logout: () => void
 }
 
-/**
- * Prevent multiple refresh calls simultaneously
- */
-
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   isHydrated: false,
-  isAuthenticated: false,
-  isLoading: false,
 
-  /**
-   Instant hydration from MMKV
-   */
   hydrate: () => {
     const token = getToken()
-    // console.log('Token hydrate', token)
 
-    if (token) {
-      set({
-        accessToken: token,
-        isAuthenticated: true,
-        isHydrated: true
-      })
-    }
-  },
-
-  /**
-   LOGIN
-   */
-  login: (token) => {
-    setToken(token)
     set({
-      accessToken: token,
-      isAuthenticated: true,
+      accessToken: token ?? null,
       isHydrated: true
     })
   },
 
-  /**
-   LOGOUT
-   */
+  login: (token) => {
+    setToken(token)
+
+    set({
+      accessToken: token,
+      isHydrated: true
+    })
+  },
+
   logout: () => {
     clearToken()
-    // useUserStore.getState().clearUser()
 
     set({
       accessToken: null,
-      isHydrated: true,
-      isAuthenticated: false
+      isHydrated: true
     })
   }
 }))
