@@ -1,43 +1,24 @@
-import AppButton from "@/components/ui/AppButton";
-import AppScreen from "@/components/ui/AppScreen";
-import { AppToast } from "@/components/ui/AppToast";
-import { router } from "expo-router";
-import { Text, View } from "react-native";
+import { Redirect } from "expo-router";
+import { useAuthStore } from "@/store/useAuthStore";
+import { View, ActivityIndicator } from "react-native";
 
 export default function Index() {
-  const handleClick = () => {
-    AppToast.success({ title: "Hey there!", description: "i am good now" })
-  }
-  return (
-    <AppScreen>
-      <View className="flex-1 items-center justify-center bg-white gap-5">
-        <Text className="text-xl font-bold text-blue-700">
-          Welcome to Nativewind!
-        </Text>
-        <AppButton
-          title="Success Toast"
-          onPress={() => handleClick()}
-        />
-        <AppButton
-          title="Error Toast"
-          onPress={() => AppToast.error({ title: "Error", description: "This is error toast" })}
-        />
-        <AppButton
-          title="Info Toast"
-          className={"bg-black"}
-          onPress={() => AppToast.info({ title: "Info", description: "This is info toast" })}
-        />
-        <AppButton
-          title="Login"
-          className={"bg-black"}
-          onPress={() => router.replace("/(auth)/signin")}
-        />
-        <AppButton
-          title="Logout"
-          className={"bg-black"}
-          onPress={() => AppToast.info({ title: "Info", description: "This is info toast" })}
-        />
+  const { accessToken, isHydrated } = useAuthStore();
+
+  // ⏳ Wait for hydration
+  if (!isHydrated) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <ActivityIndicator />
       </View>
-    </AppScreen>
-  );
+    );
+  }
+
+  // 🔒 Not logged in
+  if (!accessToken) {
+    return <Redirect href="/(auth)/signin" />;
+  }
+
+  // ✅ Logged in
+  return <Redirect href="/(tabs)" />;
 }

@@ -1,4 +1,5 @@
 import {useAuthStore} from '@/store/useAuthStore'
+import {getAccessToken} from '@/utils/authToken'
 import axios from 'axios'
 
 /* ================= CONFIG ================= */
@@ -23,39 +24,22 @@ const divider = () =>
 /* ================= REQUEST ================= */
 
 api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken
+  const token = getAccessToken()
+  // console.log('Token from axios', token)
 
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `Token ${token}`
   }
 
   ;(config as any)._startTime = Date.now()
 
-  log('\n🟡 API REQUEST')
+  log('🟡 API REQUEST')
   log('➡️', config.method?.toUpperCase(), config.url)
+  log('➡️', config.headers)
   log('📦 Body:', config.data)
 
   return config
 })
-
-/* ================= REFRESH LOCK ================= */
-
-let refreshPromise: Promise<string | null> | null = null
-
-/**
- SINGLE refresh for multiple 401s
- */
-const getFreshToken = async () => {
-  if (!refreshPromise) {
-    refreshPromise = useAuthStore.getState().refreshAccessToken()
-
-    refreshPromise.finally(() => {
-      refreshPromise = null
-    })
-  }
-
-  return refreshPromise
-}
 
 /* ================= RESPONSE ================= */
 
@@ -63,23 +47,18 @@ api.interceptors.response.use(
   (res) => {
     const time = Date.now() - ((res.config as any)._startTime ?? Date.now())
 
-    log(
-      '🟢 API RESPONSE',
-      res.config.url,
-      `${time}ms`,
-      'Status Code:',
-      res.status
-    )
+    log('🟢 API RESPONSE', res.config.url, `${time}ms`, 'Status:', res.status)
+
     divider()
 
     return res
   },
 
   async (error) => {
-    const originalRequest = error.config
+    const status = error.response?.status ?? 0
 
     const normalizedError = {
-      status: error.response?.status ?? 0,
+      status,
       message:
         error.response?.data?.message ||
         error.response?.data?.detail ||
@@ -87,23 +66,17 @@ api.interceptors.response.use(
       raw: error.response?.data
     }
 
-    log('🔴 API ERROR', originalRequest?.url, normalizedError)
+    log('🔴 API ERROR', error.config?.url, normalizedError)
 
     /**
-     ✅ AUTO REFRESH
+     👉 Force logout on unauthorized
      */
-    if (normalizedError.status === 401 && !originalRequest?._retry) {
-      originalRequest._retry = true
+    if (status === 401) {
+      const logout = useAuthStore.getState().logout
 
-      try {
-        const newToken = await getFreshToken()
-
-        if (newToken) {
-          originalRequest.headers.Authorization = `Bearer ${newToken}`
-          return api(originalRequest)
-        }
-      } catch {
-        // refreshAccessToken already logs out
+      // Prevent multiple logout calls
+      if (useAuthStore.getState().isAuthenticated) {
+        logout()
       }
     }
 

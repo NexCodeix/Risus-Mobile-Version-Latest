@@ -1,16 +1,16 @@
 import {create} from 'zustand'
-import {setToken, getTokens, clearTokens} from '@/utils/storage'
+import {setToken, getToken, clearToken} from '@/utils/storage'
 import {api} from '@/lib/axios'
 import {useUserStore} from './useUserStore'
 
 type AuthState = {
   accessToken: string | null
-  refreshToken: string | null
+  isHydrated: boolean
   isAuthenticated: boolean
   isLoading: boolean
 
   hydrate: () => void
-  login: (email: string, password: string) => Promise<void>
+  login: (token: string) => void
   logout: () => void
 }
 
@@ -20,7 +20,7 @@ type AuthState = {
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
-  refreshToken: null,
+  isHydrated: false,
   isAuthenticated: false,
   isLoading: false,
 
@@ -28,12 +28,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
    Instant hydration from MMKV
    */
   hydrate: () => {
-    const {accessToken} = getTokens()
+    const token = getToken()
+    // console.log('Token hydrate', token)
 
-    if (accessToken) {
+    if (token) {
       set({
-        accessToken,
-        isAuthenticated: true
+        accessToken: token,
+        isAuthenticated: true,
+        isHydrated: true
       })
     }
   },
@@ -41,40 +43,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   /**
    LOGIN
    */
-  login: async (email, password) => {
-    try {
-      set({isLoading: true})
-
-      const res = await api.post('/user/obtain-token/', {
-        email,
-        password
-      })
-
-      const {key} = res.data
-
-      setToken(key)
-
-      set({
-        accessToken: key,
-        isAuthenticated: true,
-        isLoading: false
-      })
-    } catch (err) {
-      set({isLoading: false})
-      throw err
-    }
+  login: (token) => {
+    setToken(token)
+    set({
+      accessToken: token,
+      isAuthenticated: true,
+      isHydrated: true
+    })
   },
 
   /**
    LOGOUT
    */
   logout: () => {
-    clearTokens()
-    useUserStore.getState().clearUser()
+    clearToken()
+    // useUserStore.getState().clearUser()
 
     set({
       accessToken: null,
-      refreshToken: null,
+      isHydrated: true,
       isAuthenticated: false
     })
   }
