@@ -13,25 +13,27 @@ import { router } from "expo-router";
 import { loginRequest } from "@/services/auth.service";
 
 export default function SignIn() {
-    const login = useAuthStore.getState().login
-    const isLoading = useAuthStore((s) => s.isLoading);
-
-    const fetchUser = useUserStore((s) => s.fetchUser);
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleLogin = async () => {
         if (!email || !password) {
             return Alert.alert("Missing fields");
         }
+        setIsLoading(true)
 
         try {
             const data = await loginRequest(email, password);
             useAuthStore.getState().login(data.key)
+            setIsLoading(false)
             router.replace("/"); // go to app
+
         } catch (err: any) {
+            setIsLoading(false)
             Alert.alert("Login failed", err.message);
+        } finally {
+            setIsLoading(false)
         }
     };
 
