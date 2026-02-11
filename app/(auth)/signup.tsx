@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { api } from "@/lib/axios";
 import { router } from "expo-router";
+import AppScreen from "@/components/ui/AppScreen";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -41,6 +42,13 @@ export default function SignUp() {
   };
 
   return (
+    <AppScreen
+        animateOnFocus
+        removeHorizontalPadding
+        statusBarStyle="dark"
+      
+    >
+
     <View style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
 
@@ -83,6 +91,7 @@ export default function SignUp() {
         </Text>
       </Pressable>
     </View>
+</AppScreen>
   );
 }
 

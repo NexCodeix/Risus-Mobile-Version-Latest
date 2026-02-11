@@ -44,7 +44,7 @@ export const useUserStore = create<UserState>((set, get) => ({
       try {
         set({ isLoading: true, error: null });
 
-        const res = await api.get("/user/profile/"); // change endpoint if needed
+        const res = await api.get('/user/profile/')
 
         set({
           user: res.data,
@@ -86,7 +86,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     });
 
     try {
-      const res = await api.patch("/users/me", data);
+      const res = await api.post("/user/profile/update/", data);
 
       set({
         user: res.data,

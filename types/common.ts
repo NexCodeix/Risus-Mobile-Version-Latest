@@ -1,11 +1,12 @@
 import {Feather, Ionicons} from '@expo/vector-icons'
-import {ComponentProps} from 'react'
+import {ComponentProps, ReactNode} from 'react'
 import {
   StyleProp,
   TextInputProps,
   TextProps,
   TextStyle,
-  TouchableOpacityProps
+  TouchableOpacityProps,
+  ViewStyle
 } from 'react-native'
 
 // Typo
@@ -90,3 +91,16 @@ export type BackButtonProps = {
   iconColor?: string
   iconSize?: number
 } & TouchableOpacityProps
+
+
+//screen types
+export interface AppScreenProps {
+  /** The content to be rendered within the screen. */
+  children: ReactNode;
+  className?: string;
+  style?: StyleProp<ViewStyle>;
+  animateOnFocus?: boolean;
+  removeHorizontalPadding?: boolean;
+  horizontalPadding?: string;
+  statusBarStyle?: 'light' | 'dark';
+}

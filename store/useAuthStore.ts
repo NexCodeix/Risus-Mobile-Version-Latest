@@ -1,81 +1,43 @@
 import {create} from 'zustand'
-import {setToken, getTokens, clearTokens} from '@/utils/storage'
-import {api} from '@/lib/axios'
-import {useUserStore} from './useUserStore'
+import {setToken, getToken, clearToken} from '@/utils/storage'
 
 type AuthState = {
   accessToken: string | null
-  refreshToken: string | null
-  isAuthenticated: boolean
-  isLoading: boolean
+  isHydrated: boolean
 
   hydrate: () => void
-  login: (email: string, password: string) => Promise<void>
+  login: (token: string) => void
   logout: () => void
 }
 
-/**
- * Prevent multiple refresh calls simultaneously
- */
-
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
-  refreshToken: null,
-  isAuthenticated: false,
-  isLoading: false,
+  isHydrated: false,
 
-  /**
-   Instant hydration from MMKV
-   */
   hydrate: () => {
-    const {accessToken} = getTokens()
+    const token = getToken()
 
-    if (accessToken) {
-      set({
-        accessToken,
-        isAuthenticated: true
-      })
-    }
+    set({
+      accessToken: token ?? null,
+      isHydrated: true
+    })
   },
 
-  /**
-   LOGIN
-   */
-  login: async (email, password) => {
-    try {
-      set({isLoading: true})
+  login: (token) => {
+    setToken(token)
 
-      const res = await api.post('/user/obtain-token/', {
-        email,
-        password
-      })
-
-      const {key} = res.data
-
-      setToken(key)
-
-      set({
-        accessToken: key,
-        isAuthenticated: true,
-        isLoading: false
-      })
-    } catch (err) {
-      set({isLoading: false})
-      throw err
-    }
+    set({
+      accessToken: token,
+      isHydrated: true
+    })
   },
 
-  /**
-   LOGOUT
-   */
   logout: () => {
-    clearTokens()
-    useUserStore.getState().clearUser()
+    clearToken()
 
     set({
       accessToken: null,
-      refreshToken: null,
-      isAuthenticated: false
+      isHydrated: true
     })
   }
 }))
