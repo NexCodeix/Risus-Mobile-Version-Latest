@@ -17,6 +17,7 @@ export default function Index() {
   // 🔒 Not logged in
   if (!accessToken) {
     return <Redirect href="/(auth)/signin" />;
+    // return <Redirect href="/(tabs)/Setting" />;
   }
 
   // ✅ Logged in
