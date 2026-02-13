@@ -9,17 +9,19 @@ import { useUserStore } from '@/store/useUserStore'
 
 export default function HomeScreen() {
     const profile = useUserStore(state => state.user)
-    // console.log("profile",JSON.stringify(profile, null, 2))
+    console.log("profile", profile?.username)
+    // console.log("profile", JSON.stringify(profile, null, 2))
     const handleLogout = () => {
         useAuthStore.getState().logout();
         useUserStore.getState().clearUser()
-        router.replace("/(auth)/signin");
+        router.replace("/(auth)/welcome");
     };
     return (
         <AppScreen>
             <Text>HomeScreen</Text>
             <AppButton title='Success' onPress={() => AppToast.success({ title: "Hey" })} />
             <AppButton title='Logout' onPress={handleLogout} />
+            <AppButton title='Welcome Screen' onPress={() => router.push("/(auth)/welcome")} />
         </AppScreen>
     )
 }
