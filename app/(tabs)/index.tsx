@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 export default function HomeScreen() {
     const { user, isUserLoading } = useUser();
     const { logout } = useAuth();
+    console.log(user)
 
     const handleLogout = async () => {
         await logout();
@@ -44,6 +45,10 @@ export default function HomeScreen() {
               title="Welcome Screen"
               onPress={() => router.push("/(auth)/welcome")}
           />
+            <AppButton
+                title="Profile Screen"
+                onPress={() => router.push("/(routes)/profile")}
+            />
       </AppScreen>
   );
 }

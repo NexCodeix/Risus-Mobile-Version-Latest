@@ -6,7 +6,7 @@ import { useUser } from "@/hooks/useUser";
 export default function Index() {
   const token = getToken();
 
-  const { user, isUserLoading } = useUser();
+  const { isUserLoading } = useUser();
 
   // 🔒 Not logged in
   if (!token) {
