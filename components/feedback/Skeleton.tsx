@@ -12,7 +12,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { clsx } from 'clsx';
-import { useTheme } from '@/provider/ThemeProvider';
 
 interface SkeletonProps {
   width?: number | string;
@@ -31,7 +30,6 @@ const Skeleton: React.FC<SkeletonProps> = ({
   className,
   shimmerDuration = 1500,
 }) => {
-  const { theme } = useTheme();
   const progress = useSharedValue(-1);
 
   useEffect(() => {
@@ -49,12 +47,12 @@ const Skeleton: React.FC<SkeletonProps> = ({
     width,
     height,
     borderRadius,
-    backgroundColor: theme.colors.bg.surface,
+    backgroundColor: '#ffffff',
   };
 
   const gradientColors = [
     'transparent',
-    theme.colors.bg.surfaceAlt,
+    '#f8fafc',
     'transparent',
   ];
 
