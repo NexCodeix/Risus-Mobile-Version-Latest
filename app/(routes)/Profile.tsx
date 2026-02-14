@@ -1,34 +1,27 @@
-import React, { useState, useEffect } from "react";
+import * as ImagePicker from 'expo-image-picker';
+import { router } from "expo-router";
 import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  ActivityIndicator,
-  TextInput,
-  Alert,
-} from "react-native";
-import {
-  ChevronLeft,
-  MoreVertical,
-  CheckCircle2,
   Briefcase,
+  CheckCircle2,
+  ChevronLeft,
   GraduationCap,
   Heart,
-  Camera,
-  Calendar,
-  Globe,
-  Phone,
+  MoreVertical
 } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { router } from "expo-router";
-import * as ImagePicker from 'expo-image-picker';
 
-import { useUser } from "@/hooks/useUser";
-import AppBottomSheet from "@/components/ui/AppBottomSheet";
-import AppButton from "@/components/ui/AppButton";
 import EditProfileSheet from "@/components/modules/User/EditProfileSheet";
+import { useUser } from "@/hooks/useUser";
 
 interface FormData {
   firstName: string;
@@ -189,7 +182,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* ================= PROFILE CARD ================= */}
-        <View className="px-6 -mt-16">
+        <View className="px-4 -mt-16">
           <Animated.View
             entering={FadeInUp.springify()}
             className="bg-white rounded-[40px] p-6 shadow-xl shadow-black/5 border border-slate-100"
