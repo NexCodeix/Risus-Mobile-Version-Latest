@@ -1,23 +1,25 @@
 import { Redirect } from "expo-router";
-import { useAuthStore } from "@/store/useAuthStore";
 import { View, ActivityIndicator } from "react-native";
+import { getToken } from "@/utils/storage";
+import { useUser } from "@/hooks/useUser";
 
 export default function Index() {
-  const { accessToken, isHydrated } = useAuthStore();
+  const token = getToken();
 
-  // ⏳ Wait for hydration
-  if (!isHydrated) {
+  const { isUserLoading } = useUser();
+
+  // 🔒 Not logged in
+  if (!token) {
+    return <Redirect href="/(auth)/welcome" />;
+  }
+
+  // ⏳ Wait for user query
+  if (isUserLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator />
       </View>
     );
-  }
-
-  // 🔒 Not logged in
-  if (!accessToken) {
-    return <Redirect href="/(auth)/signin" />;
-    // return <Redirect href="/(tabs)/Setting" />;
   }
 
   // ✅ Logged in

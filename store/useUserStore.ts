@@ -42,14 +42,15 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     fetchPromise = (async () => {
       try {
-        set({ isLoading: true, error: null });
+        set({isLoading: true, error: null})
 
         const res = await api.get('/user/profile/')
+        // console.log(res.data)
 
         set({
           user: res.data,
-          isLoading: false,
-        });
+          isLoading: false
+        })
       } catch (err: any) {
         set({
           isLoading: false,
