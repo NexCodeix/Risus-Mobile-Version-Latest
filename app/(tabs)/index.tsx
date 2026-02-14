@@ -1,27 +1,49 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import AppButton from '@/components/ui/AppButton'
-import { AppToast } from '@/components/ui/AppToast'
-import AppScreen from '@/components/ui/AppScreen'
-import { useAuthStore } from '@/store/useAuthStore'
-import { router } from 'expo-router'
-import { useUserStore } from '@/store/useUserStore'
+import { View, Text, ActivityIndicator } from "react-native";
+import React from "react";
+import AppButton from "@/components/ui/AppButton";
+import { AppToast } from "@/components/ui/AppToast";
+import AppScreen from "@/components/ui/AppScreen";
+import { router } from "expo-router";
+import { useUser } from "@/hooks/useUser";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function HomeScreen() {
-    const profile = useUserStore(state => state.user)
-    console.log("profile", profile?.username)
-    // console.log("profile", JSON.stringify(profile, null, 2))
-    const handleLogout = () => {
-        useAuthStore.getState().logout();
-        useUserStore.getState().clearUser()
+    const { user, isUserLoading } = useUser();
+    const { logout } = useAuth();
+
+    const handleLogout = async () => {
+        await logout();
         router.replace("/(auth)/welcome");
     };
+
+    if (isUserLoading) {
+        return (
+            <View className="flex-1 items-center justify-center">
+                <ActivityIndicator />
+            </View>
+        );
+    }
+
     return (
         <AppScreen>
-            <Text>HomeScreen</Text>
-            <AppButton title='Success' onPress={() => AppToast.success({ title: "Hey" })} />
-            <AppButton title='Logout' onPress={handleLogout} />
-            <AppButton title='Welcome Screen' onPress={() => router.push("/(auth)/welcome")} />
-        </AppScreen>
-    )
+          <Text className="text-xl font-bold mb-4">
+              Welcome {user?.name || user?.email}
+          </Text>
+
+          <AppButton
+              title="Success"
+              onPress={() => AppToast.success({ title: "Hey" })}
+          />
+
+          <AppButton
+              title="Logout"
+              onPress={handleLogout}
+          />
+
+          <AppButton
+              title="Welcome Screen"
+              onPress={() => router.push("/(auth)/welcome")}
+          />
+      </AppScreen>
+  );
 }

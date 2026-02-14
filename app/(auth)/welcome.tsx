@@ -1,5 +1,6 @@
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { Heart, MessageSquare, Plus, Smile, Sparkles } from 'lucide-react-native';
 import React, { useEffect } from 'react';
 import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
@@ -152,7 +153,7 @@ const WelcomeScreen = () => {
                   <Text className="text-blue-600">and connect</Text> with the world around you
                 </Text>
 
-                <TouchableOpacity activeOpacity={0.8} className="w-full mt-10">
+                <TouchableOpacity onPress={() => router.push("/(auth)/signin")} activeOpacity={0.8} className="w-full mt-10">
                   <View className="rounded-2xl overflow-hidden">
                     <LinearGradient
                       colors={['#6385E8', '#4F70D9']}
