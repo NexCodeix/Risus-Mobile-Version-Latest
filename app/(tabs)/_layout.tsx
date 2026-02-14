@@ -22,7 +22,7 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{ title: "Home" }} />
       <Tabs.Screen name="chat" options={{ title: "Chat" }} />
       <Tabs.Screen name="create-post" options={{ title: "Create" }} />
-      <Tabs.Screen name="setting" options={{ title: "Setting" }} />
+      <Tabs.Screen name="Setting" options={{ title: "Setting" }} />
     </Tabs>
   );
 }
@@ -62,7 +62,7 @@ function CustomTabBar({ state, navigation }: any) {
               case "index": IconComponent = Home; break;
               case "chat": IconComponent = MessageCircle; break;
               case "create-post": IconComponent = Plus; break;
-              case "setting": IconComponent = Settings; break;
+              case "Setting": IconComponent = Settings; break;
               default: IconComponent = Home;
             }
 
@@ -70,7 +70,7 @@ function CustomTabBar({ state, navigation }: any) {
             if (isFocused) {
               return (
                 <LinearGradient
-                  colors={["#D946EF", "#9333EA"]} // Matches the image's vibrant purple
+                  colors={[ "#0167CC", "#0277CC"]} // Matches the image's vibrant purple
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={{
@@ -80,7 +80,7 @@ function CustomTabBar({ state, navigation }: any) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     // Adding a slight outer glow/shadow to the active button
-                    shadowColor: "#9333EA",
+                    shadowColor: "#F8FEFC",
                     shadowOffset: { width: 0, height: 4 },
                     shadowOpacity: 0.3,
                     shadowRadius: 8,

@@ -1,14 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { ChevronLeft, Eye, EyeOff, Lock, Mail } from "lucide-react-native";
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
-    Alert,
     Image,
     ScrollView,
     Text,
-    TextInput,
     TouchableOpacity,
     View
 } from "react-native";
@@ -18,32 +17,35 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import AppKeyboardAvoidingView from "@/components/ui/AppKeyboardAvoidingView";
 import AppScreen from "@/components/ui/AppScreen";
 import { AppToast } from "@/components/ui/AppToast";
+import BackButton from "@/components/ui/BackButton";
+import Input from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
+import { SignInForm, SignInSchema } from "@/validate/auth";
 
 export default function SignIn() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
     const { login, isLoginLoading } = useAuth();
 
-    // Logic remains identical
-    const handleLogin = async () => {
-        if (!email || !password) {
-            return AppToast.info({ title: "Missing Fields!", description: "Please fill up all fields." })
+    const { control, handleSubmit, formState: { errors } } = useForm<SignInForm>({
+        resolver: zodResolver(SignInSchema),
+        defaultValues: {
+            email: "",
+            password: "",
         }
+    });
 
+    const handleLogin = async (data: SignInForm) => {
         try {
             setIsLoading(true);
 
-            await login({ email, password });
+            await login({ email: data.email, password: data.password });
 
             AppToast.success({
                 title: "Login successful!",
                 description: "Welcome back to Risus.",
             });
 
-            router.replace("/(tabs)"); // 🔥 go directly to tabs
+            router.replace("/(tabs)");
         } catch (err: any) {
             console.log(err)
             AppToast.error({
@@ -66,15 +68,13 @@ export default function SignIn() {
                 className="absolute inset-0"
             />
 
-            <AppScreen>
+            <AppScreen animateOnFocus>
                 <AppKeyboardAvoidingView>
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} bounces={false}>
 
                         {/* 2. TOP NAVIGATION BAR */}
                         <View className="flex-row items-center justify-between pt-5 pb-4">
-                            <TouchableOpacity onPress={() => router.back()} className="p-2">
-                                <ChevronLeft color="#334155" size={28} />
-                            </TouchableOpacity>
+                            <BackButton />
                             <View className="flex-row items-center bg-white/40 px-4 py-2 rounded-full border border-white/60">
                                 <Text className="text-slate-600 mr-2 text-xs font-medium">Don&apos;t have an account?</Text>
                                 <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
@@ -101,45 +101,46 @@ export default function SignIn() {
                                     <Text className="text-3xl font-bold text-slate-800 text-center">Welcome Back</Text>
                                     <Text className="text-slate-500 text-center mt-2 mb-8 font-medium">Please sign in to your account</Text>
 
-                                    {/* EMAIL INPUT */}
-                                    <View className="mb-5">
-                                        <Text className="text-slate-500 text-xs font-bold uppercase tracking-wider ml-1 mb-2">Email Address</Text>
-                                        <View className="flex-row items-center border-b border-slate-200 py-3">
-                                            <Mail size={20} color="#64748b" strokeWidth={1.5} />
-                                            <TextInput
+                                    <Controller
+                                        control={control}
+                                        name="email"
+                                        render={({ field: { onChange, onBlur, value } }) => (
+                                            <Input
+                                                label="Email Address"
+                                                leftIcon="mail"
                                                 placeholder="your@email.com"
-                                                placeholderTextColor="#94a3b8"
                                                 autoCapitalize="none"
-                                                className="flex-1 ml-3 text-slate-800 font-medium text-base"
-                                                value={email}
-                                                onChangeText={setEmail}
+                                                onBlur={onBlur}
+                                                onChangeText={onChange}
+                                                value={value}
+                                                error={errors.email?.message}
+                                                containerClassName="mb-5"
                                             />
-                                        </View>
-                                    </View>
+                                        )}
+                                    />
 
-                                    {/* PASSWORD INPUT */}
-                                    <View className="mb-8">
-                                        <Text className="text-slate-500 text-xs font-bold uppercase tracking-wider ml-1 mb-2">Password</Text>
-                                        <View className="flex-row items-center border-b border-slate-200 py-3">
-                                            <Lock size={20} color="#64748b" strokeWidth={1.5} />
-                                            <TextInput
+                                    <Controller
+                                        control={control}
+                                        name="password"
+                                        render={({ field: { onChange, onBlur, value } }) => (
+                                            <Input
+                                                label="Password"
+                                                leftIcon="lock"
                                                 placeholder="••••••••••••"
-                                                placeholderTextColor="#94a3b8"
-                                                secureTextEntry={!showPassword}
-                                                className="flex-1 ml-3 text-slate-800 font-medium text-base"
-                                                value={password}
-                                                onChangeText={setPassword}
+                                                secureTextEntry
+                                                onBlur={onBlur}
+                                                onChangeText={onChange}
+                                                value={value}
+                                                error={errors.password?.message}
+                                                containerClassName="mb-8"
                                             />
-                                            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                                {showPassword ? <EyeOff size={20} color="#94a3b8" /> : <Eye size={20} color="#94a3b8" />}
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
+                                        )}
+                                    />
 
                                     {/* SIGN IN BUTTON */}
                                     <TouchableOpacity
                                         activeOpacity={0.8}
-                                        onPress={handleLogin}
+                                        onPress={handleSubmit(handleLogin)}
                                         disabled={isLoading}
                                     >
                                         <View className="rounded-2xl overflow-hidden">

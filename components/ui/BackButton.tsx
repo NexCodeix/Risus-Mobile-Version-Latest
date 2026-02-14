@@ -2,7 +2,6 @@ import {BackButtonProps} from '@/types/common'
 import {Ionicons} from '@expo/vector-icons'
 import {router} from 'expo-router'
 import {TouchableOpacity} from 'react-native'
-import {useTheme} from '@/provider/ThemeProvider'
 
 const BackButton = ({
   onPress,
@@ -12,8 +11,6 @@ const BackButton = ({
   className,
   ...props
 }: BackButtonProps) => {
-  const {theme} = useTheme()
-
   const handlePress = () => {
     if (onPress) {
       onPress()
@@ -28,11 +25,7 @@ const BackButton = ({
       className={`p-2 font-bold ${className}`}
       {...props}
     >
-      <Ionicons
-        name={iconName}
-        size={iconSize}
-        color={iconColor || theme.colors.text.primary}
-      />
+      <Ionicons name={iconName} size={iconSize} color={iconColor} />
     </TouchableOpacity>
   )
 }
