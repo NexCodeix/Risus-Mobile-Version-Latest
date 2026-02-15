@@ -1,10 +1,11 @@
 import React from 'react'
 import {Tabs} from 'expo-router'
-import {View, TouchableOpacity, Image} from 'react-native'
+import {View, TouchableOpacity} from 'react-native'
 import {BlurView} from 'expo-blur'
 import {Home, MessageCircle, Settings, SquarePen} from 'lucide-react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import RisusIcon from '../../assets/risus-app-icons_round.png'
+import {Image} from 'expo-image'
 
 export default function TabLayout() {
   return (
@@ -28,7 +29,7 @@ export default function TabLayout() {
   )
 }
 
-function CustomTabBar({ state, navigation }: any) {
+function CustomTabBar({state, navigation}: any) {
   const iconSize = 24
   const inactiveColor = '#64748b' // Modern slate colors for inactive state
 
@@ -89,7 +90,7 @@ function CustomTabBar({ state, navigation }: any) {
       <BlurView
         intensity={100}
         tint="light" // Light mode glassy effect
-        className="flex-row items-center justify-between px-2 py-2 rounded-[40px] overflow-hidden border border-white/60 bg-white shadow-sm"
+        className="flex-row items-center justify-between px-2 py-2 rounded-[40px] overflow-hidden border border-white/60 bg-E1F7FF shadow-sm"
         style={{width: '100%', height: 75}}
       >
         {/* Left side tabs */}
@@ -99,7 +100,7 @@ function CustomTabBar({ state, navigation }: any) {
             overflow: 'hidden',
             alignItems: 'center',
             justifyContent: 'space-around',
-            flex: 1, // Keep flex 1 for proper distribution
+            flex: 1 // Keep flex 1 for proper distribution
           }}
         >
           {state.routes
@@ -143,7 +144,7 @@ function CustomTabBar({ state, navigation }: any) {
             width: 60,
             height: 60,
             borderRadius: 30,
-            backgroundColor: 'white', // Background for the pop-up effect
+            backgroundColor: 'white', 
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 4},
             shadowOpacity: 0.3,
@@ -158,7 +159,9 @@ function CustomTabBar({ state, navigation }: any) {
               height: 54,
               borderRadius: 27
             }}
-            resizeMode="contain"
+            placeholder={{
+              blurhash: 'LGF5?xYk^6#M@-5c,1J5@[or[Q6.'
+            }}
           />
         </TouchableOpacity>
 
@@ -169,7 +172,7 @@ function CustomTabBar({ state, navigation }: any) {
             overflow: 'hidden',
             alignItems: 'center',
             justifyContent: 'space-around',
-            flex: 1, // Keep flex 1 for proper distribution
+            flex: 1 // Keep flex 1 for proper distribution
           }}
         >
           {state.routes
