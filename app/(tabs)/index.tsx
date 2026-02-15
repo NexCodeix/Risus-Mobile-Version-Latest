@@ -28,7 +28,7 @@ export default function HomeScreen() {
   return (
     <AppScreen>
       <Text className="text-xl font-bold mb-4">
-        Welcome {user?.name || user?.email}
+        Welcome {user?.email}
       </Text>
 
       <AppButton

@@ -78,11 +78,13 @@ export default function SettingsScreen() {
           icon={<Wallet size={20} color="#3b82f6" />}
           title="RUSD Balance"
           subtitle="View your current RUSD holdings"
+          onPress={() => router.push("/(routes)/coming-soon")}
         />
         <SettingItem
           icon={<Wallet size={20} color="#3b82f6" />}
           title="RISUS Balance"
           subtitle="View your current RISUS holdings"
+          onPress={() => router.push("/(routes)/coming-soon")}
         />
 
         {/* Promotions Section */}
@@ -91,16 +93,19 @@ export default function SettingsScreen() {
           icon={<Hand size={20} color="#3b82f6" />}
           title="Influencer Partnerships"
           subtitle="Collaborate with creators to promote your brand"
+          onPress={() => router.push("/(routes)/coming-soon")}
         />
         <SettingItem
           icon={<BarChart2 size={20} color="#3b82f6" />}
           title="Monetize Pings"
           subtitle="Earn from Ping and boost engagement automatically"
+          onPress={() => router.push("/(routes)/coming-soon")}
         />
         <SettingItem
           icon={<Rocket size={20} color="#3b82f6" />}
           title="Post Promotion"
           subtitle="Promote posts and reach a wider audience fast"
+          onPress={() => router.push("/(routes)/coming-soon")}
         />
 
         {/* General Section */}
@@ -116,6 +121,7 @@ export default function SettingsScreen() {
         <SettingItem
           icon={<PieChart size={20} color="#3b82f6" />}
           title="Analytics"
+          onPress={() => router.push("/(routes)/coming-soon")}
         />
         <SettingItem
           icon={<HelpCircle size={20} color="#3b82f6" />}
