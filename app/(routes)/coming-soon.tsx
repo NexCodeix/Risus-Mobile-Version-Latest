@@ -60,7 +60,6 @@ export default function ComingSoon() {
               We&apos;re building something amazing for you. Get ready for a brand new experience.
             </Text>
           </View>
-        </View>
 
         {/* 4. Footer / Call to Action */}
         <View className="px-8 pb-10">
