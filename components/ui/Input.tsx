@@ -8,7 +8,6 @@ import Animated, {
   interpolateColor
 } from 'react-native-reanimated'
 import {clsx} from 'clsx'
-import {useTheme} from '@/provider/ThemeProvider'
 
 const Input = forwardRef<TextInput, InputProps>(
   (
@@ -32,7 +31,7 @@ const Input = forwardRef<TextInput, InputProps>(
     ref
   ) => {
     // STATE MANAGEMENT
-    const {theme} = useTheme()
+
     const [isFocused, setIsFocused] = useState(false)
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
@@ -45,10 +44,7 @@ const Input = forwardRef<TextInput, InputProps>(
       const borderColor = interpolateColor(
         isFocused ? 1 : 0,
         [0, 1],
-        [
-          error ? theme.colors.error : theme.colors.border.DEFAULT,
-          error ? theme.colors.error : theme.colors.primary
-        ]
+        [error ? '#EF4444' : '#e2e8f0', error ? '#EF4444' : '#3B82F6']
       )
 
       return {
@@ -64,7 +60,7 @@ const Input = forwardRef<TextInput, InputProps>(
       const backgroundColor = interpolateColor(
         isFocused ? 1 : 0,
         [0, 1],
-        [theme.colors.bg.surface, theme.colors.bg.surfaceAlt]
+        ['#ffffff', '#f8fafc']
       )
 
       return {
@@ -109,7 +105,7 @@ const Input = forwardRef<TextInput, InputProps>(
      */
     const shouldSecureText = secureTextEntry && !isPasswordVisible
 
-    const defaultIconColor = theme.colors.text.muted
+    const defaultIconColor = '#94a3b8'
 
     // RENDER
 
@@ -118,9 +114,12 @@ const Input = forwardRef<TextInput, InputProps>(
         {/* Label */}
         {label && (
           <Text
-            className={clsx('mb-2 text-sm font-medium', labelClassName)}
+            className={clsx(
+              'mb-2 text-sm font-medium text-slate-500',
+              labelClassName
+            )}
             style={{
-              color: error ? theme.colors.error : theme.colors.text.secondary
+              color: error ? '#EF4444' : '#64748b'
             }}
           >
             {label}
@@ -142,11 +141,7 @@ const Input = forwardRef<TextInput, InputProps>(
               <Feather
                 name={leftIcon}
                 size={iconSize}
-                color={
-                  isFocused
-                    ? theme.colors.primary
-                    : iconColor || defaultIconColor
-                }
+                color={isFocused ? '#3B82F6' : iconColor || defaultIconColor}
               />
             </View>
           )}
@@ -165,9 +160,12 @@ const Input = forwardRef<TextInput, InputProps>(
               setIsFocused(false)
               props.onBlur?.(e)
             }}
-            className={clsx('flex-1 px-2 py-3  text-base', inputClassName)}
-            style={[{color: theme.colors.text.primary}, props.style]}
-            placeholderTextColor={theme.colors.text.muted}
+            className={clsx(
+              'flex-1 px-2 py-3 text-base text-slate-800',
+              inputClassName
+            )}
+            style={[{color: '#1e293b'}, props.style]}
+            placeholderTextColor={'#94a3b8'}
           />
 
           {/* Right Icon / Password Toggle */}
@@ -180,11 +178,7 @@ const Input = forwardRef<TextInput, InputProps>(
               <Feather
                 name={displayRightIcon}
                 size={iconSize}
-                color={
-                  isFocused
-                    ? theme.colors.primary
-                    : iconColor || defaultIconColor
-                }
+                color={isFocused ? '#3B82F6' : iconColor || defaultIconColor}
               />
             </Pressable>
           )}
@@ -194,7 +188,7 @@ const Input = forwardRef<TextInput, InputProps>(
         {(error || helperText) && (
           <Text
             style={{
-              color: error ? theme.colors.error : theme.colors.text.muted
+              color: error ? '#EF4444' : '#94a3b8'
             }}
             className={clsx('mt-2 text-xs')}
           >

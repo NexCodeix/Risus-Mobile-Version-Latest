@@ -8,6 +8,8 @@ import { AppToastRoot } from "@/components/ui/AppToast";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const queryClient = new QueryClient()
 
@@ -20,8 +22,12 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-        <AppToastRoot />
+        <GestureHandlerRootView>
+          <BottomSheetModalProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+            <AppToastRoot />
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
       </SafeAreaProvider>
     </QueryClientProvider>
   )

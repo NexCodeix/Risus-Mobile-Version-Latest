@@ -1,5 +1,5 @@
 import {useAuthStore} from '@/store/useAuthStore'
-import {getAccessToken} from '@/utils/authToken'
+import {getToken} from '@/utils/storage'
 import axios from 'axios'
 
 /* ================= CONFIG ================= */
@@ -24,7 +24,7 @@ const divider = () =>
 /* ================= REQUEST ================= */
 
 api.interceptors.request.use((config) => {
-  const token = getAccessToken()
+  const token = getToken()
   // console.log('Token from axios', token)
 
   if (token) {
@@ -73,11 +73,6 @@ api.interceptors.response.use(
      */
     if (status === 401) {
       const logout = useAuthStore.getState().logout
-
-      // Prevent multiple logout calls
-      if (useAuthStore.getState().isAuthenticated) {
-        logout()
-      }
     }
 
     divider()

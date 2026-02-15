@@ -1,66 +1,117 @@
-import React, {ReactNode} from 'react'
+/**
+ * @component AppScreen
+ * @description A versatile screen wrapper for consistent layout and animations.
+ * @author
+ * @date 2026-02-11
+ */
+
+import {clsx} from 'clsx'
+import {LinearGradient} from 'expo-linear-gradient'
+import React, {useEffect} from 'react'
 import {Keyboard, StatusBar, TouchableWithoutFeedback, View} from 'react-native'
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useIsFocused} from '@react-navigation/native'
 
-/* ================= TYPES ================= */
+import {AppScreenProps} from '@/types/common'
 
-type AppScreenProps = {
-  children?: ReactNode
-  backgroundColor?: string
-  className?: string
-  statusBarStyle?: 'light' | 'dark'
-}
-
-/* ================= COMPONENT ================= */
+/*  COMPONENT  */
 
 export default function AppScreen({
   children,
-  backgroundColor = '#FFFFFF',
   className,
-  statusBarStyle = 'dark'
+  style,
+  animateOnFocus = true,
+  removeHorizontalPadding = false,
+  horizontalPadding = 'px-5',
+  statusBarStyle = 'dark',
+  isEnableLinearGradient = false
 }: AppScreenProps) {
   const insets = useSafeAreaInsets()
+  const isFocused = useIsFocused()
+  const opacity = useSharedValue(animateOnFocus ? 0 : 1)
+
+  // Handle focus-based animation for tab screens
+  useEffect(() => {
+    if (animateOnFocus) {
+      //  withTiming for smooth transition
+      opacity.value = withTiming(isFocused ? 1 : 0, {duration: 300})
+    }
+  }, [isFocused, animateOnFocus, opacity])
+
+  const focusAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value
+  }))
+
+  // Combine custom styles with animated styles
+  const combinedStyle = [
+    {
+      paddingTop: insets.top,
+      paddingBottom: insets.bottom
+    },
+    style,
+    animateOnFocus ? focusAnimatedStyle : {}
+  ]
+
+  // Use layout animations for mount/unmount if not using focus animation
+  const layoutAnimationProps = animateOnFocus
+    ? {}
+    : {
+        entering: FadeIn.duration(300),
+        exiting: FadeOut.duration(200)
+      }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View
-        style={[
-          {
-            flex: 1,
-            backgroundColor,
-            paddingTop: insets.top
-          },
-          className
-        ]}
-      >
-        <StatusBar
-          barStyle={
-            statusBarStyle === 'dark' ? 'dark-content' : 'light-content'
-          }
-          backgroundColor={backgroundColor}
-        />
-
-        {children}
+      <View style={{flex: 1}}>
+        {isEnableLinearGradient && (
+          <LinearGradient
+            colors={['#E1F2FF', '#E1F4FF', '#FFFFFF']}
+            style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}
+          />
+        )}
+        <Animated.View
+          className={clsx('flex-1 ', className)}
+          style={[combinedStyle, {backgroundColor: 'transparent'}]}
+          {...layoutAnimationProps}
+        >
+          <StatusBar
+            barStyle={
+              statusBarStyle === 'dark' ? 'dark-content' : 'light-content'
+            }
+            backgroundColor="transparent"
+            translucent
+          />
+          <View
+            className={clsx(
+              'flex-1',
+              !removeHorizontalPadding && horizontalPadding
+            )}
+          >
+            {children}
+          </View>
+        </Animated.View>
       </View>
     </TouchableWithoutFeedback>
   )
 }
 
-/* =====================================================
+/* 
  *
  * ⚠️ IMPORTANT GUIDELINES
  *
  * ✅ USE AppScreen FOR:
- * - Every main screen
- * - Forms
- * - Chat screens
- * - Lists
- * - Profile pages
+ * - Every main screen to ensure consistent padding and safe area handling.
+ * - Screens that need fade animations on mount or focus.
  *
  * ❌ DO NOT USE AppScreen FOR:
- * - BottomSheetModal
- * - Gorhom BottomSheet content
- * - React Native Modal content
+ * - Content inside a Modal or BottomSheet that already handles safe areas.
  *
  * -----------------------------------------------------
  *
@@ -68,9 +119,15 @@ export default function AppScreen({
  *
  * <AppScreen>
  *   <AppKeyboardAvoidingView>
- *     ...content
+ *     ... your content ...
  *   </AppKeyboardAvoidingView>
  * </AppScreen>
  *
- * =====================================================
+ * -----------------------------------------------------
+ *
+ * 🎨 STYLING
+ *
+ * - Use `className` for Tailwind CSS classes (e.g., `bg-primary`).
+ * - The default background is 'bg-white dark:bg-black'.
+ * - Use `horizontalPadding` prop to adjust side padding (e.g., `horizontalPadding="px-4"`).
  */

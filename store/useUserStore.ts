@@ -1,16 +1,11 @@
 import { create } from "zustand";
 import { api } from "@/lib/axios";
 import { useAuthStore } from "@/store/useAuthStore";
+import { User } from "@/types/user.types";
 
 /**
  Adjust this type to match YOUR backend
  */
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-};
 
 type UserState = {
   user: User | null;
@@ -42,14 +37,15 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     fetchPromise = (async () => {
       try {
-        set({ isLoading: true, error: null });
+        set({isLoading: true, error: null})
 
         const res = await api.get('/user/profile/')
+        // console.log(res.data)
 
         set({
           user: res.data,
-          isLoading: false,
-        });
+          isLoading: false
+        })
       } catch (err: any) {
         set({
           isLoading: false,
