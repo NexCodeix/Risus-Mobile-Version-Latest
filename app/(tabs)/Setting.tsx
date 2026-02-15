@@ -72,6 +72,7 @@ export default function SettingsScreen() {
         <SettingItem
           icon={<Key size={20} color="#3b82f6" />}
           title="Change Password"
+          onPress={() => router.push("/(auth)/change-pass")}
         />
         <SettingItem
           icon={<Wallet size={20} color="#3b82f6" />}
@@ -167,9 +168,10 @@ const SettingItem = ({
   icon,
   title,
   subtitle,
-  titleColor = 'text-gray-800'
+  titleColor = 'text-gray-800',
+  onPress
 }: any) => (
-  <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-50">
+  <TouchableOpacity onPress={onPress} className="flex-row items-center py-4 border-b border-gray-50">
     <View className="w-10 h-10 bg-blue-50/50 rounded-full items-center justify-center">
       {icon}
     </View>

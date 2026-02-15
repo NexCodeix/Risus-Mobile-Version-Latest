@@ -120,6 +120,8 @@ export default function ProfileScreen() {
       if (formData.dateOfBirth) dataToSend.append('dateOfBirth', formData.dateOfBirth);
       if (formData.country) dataToSend.append('country', formData.country);
       if (formData.summary) dataToSend.append('summary', formData.summary);
+      if (formData.companyName) dataToSend.append('companyName', formData.companyName);
+      if (formData.graduationDate) dataToSend.append('graduationDate', formData.graduationDate);
       if (formData.achievements) dataToSend.append('achievements', formData.achievements);
 
       // Append images
