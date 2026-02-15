@@ -22,7 +22,7 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{ title: "Home" }} />
       <Tabs.Screen name="chat" options={{ title: "Chat" }} />
       <Tabs.Screen name="create-post" options={{ title: "Create" }} />
-      <Tabs.Screen name="Setting" options={{ title: "Setting" }} />
+      <Tabs.Screen name="setting" options={{ title: "Setting" }} />
     </Tabs>
   );
 }
@@ -62,7 +62,7 @@ function CustomTabBar({ state, navigation }: any) {
               case "index": IconComponent = Home; break;
               case "chat": IconComponent = MessageCircle; break;
               case "create-post": IconComponent = Plus; break;
-              case "Setting": IconComponent = Settings; break;
+              case "setting": IconComponent = Settings; break;
               default: IconComponent = Home;
             }
 
