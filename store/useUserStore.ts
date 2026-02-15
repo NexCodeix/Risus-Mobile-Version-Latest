@@ -1,16 +1,11 @@
 import { create } from "zustand";
 import { api } from "@/lib/axios";
 import { useAuthStore } from "@/store/useAuthStore";
+import { User } from "@/types/user.types";
 
 /**
  Adjust this type to match YOUR backend
  */
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-};
 
 type UserState = {
   user: User | null;

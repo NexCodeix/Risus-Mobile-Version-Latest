@@ -1,11 +1,11 @@
 import { TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { User } from "@/store/useUserStore";
 import Typo from "./Typo";
 import Skeleton from "../feedback/Skeleton";
 import { useRouter } from "expo-router";
 import Avatar from './Avatar'; // Import the new Avatar component
 import { clsx } from "clsx";
+import { User } from "@/types/user.types";
 
 type ProfileCardProps = {
   user: User | null | undefined;
@@ -31,7 +31,7 @@ const ProfileCard = ({ user, isLoading, cardClassName }: ProfileCardProps) => {
   return (
     <TouchableOpacity
       className={clsx("flex-row items-center p-4 bg-surface rounded-2xl border border-border", cardClassName)}
-      onPress={() => router.push("/(routes)/Profile")}
+      onPress={() => router.push("/(routes)/profile")}
     >
       <Avatar
         source={user?.image}

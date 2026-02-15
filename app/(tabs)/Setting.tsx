@@ -23,7 +23,8 @@ import {
   Info,
   PauseCircle,
   Trash2,
-  LogOut
+  LogOut,
+  User
 } from 'lucide-react-native'
 
 import {useUser} from '@/hooks/useUser'

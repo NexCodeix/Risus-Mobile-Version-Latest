@@ -20,7 +20,7 @@ import {
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
-import EditProfileSheet from "@/components/modules/User/EditProfileSheet";
+import EditProfileSheet from "@/components/modules/Profile/EditProfileSheet";
 import { useUser } from "@/hooks/useUser";
 
 interface FormData {
@@ -30,6 +30,8 @@ interface FormData {
   dateOfBirth: string;
   country: string;
   summary: string;
+  companyName: string;
+  graduationDate: string;
   achievements: string;
   image: any;
   cover_image: any;
@@ -45,6 +47,8 @@ export default function ProfileScreen() {
     dateOfBirth: "",
     country: "",
     summary: "",
+    companyName: "",
+    graduationDate: "",
     achievements: "",
     image: null,
     cover_image: null,
@@ -60,6 +64,8 @@ export default function ProfileScreen() {
         dateOfBirth: user.date_of_birth || "",
         country: user.country || "",
         summary: user.summary || "",
+        companyName: user.company_name || "",
+        graduationDate: user.graduation_date || "",
         achievements: user.achievements || "",
         image: null,
         cover_image: null,
@@ -72,21 +78,35 @@ export default function ProfileScreen() {
   };
 
   const pickImage = async (type: 'image' | 'cover_image') => {
+    // Request permission (recommended in latest SDK)
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permission.granted) {
+      Alert.alert(
+        'Permission required',
+        'We need access to your gallery to upload images.'
+      );
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'], // ✅ NEW API (replaces MediaTypeOptions.Images)
       allowsEditing: true,
       aspect: type === 'image' ? [1, 1] : [16, 9],
       quality: 0.8,
     });
 
-    if (!result.canceled) {
-      const imageData = {
-        uri: result.assets[0].uri,
-        type: 'image/jpeg',
-        name: `${type}_${Date.now()}.jpg`,
-      };
-      updateField(type, imageData);
-    }
+    if (result.canceled || !result.assets?.length) return;
+
+    const asset = result.assets[0];
+
+    const imageData = {
+      uri: asset.uri,
+      type: asset.mimeType ?? 'image/jpeg',
+      name: `${type}_${Date.now()}.jpg`,
+    };
+
+    updateField(type, imageData);
   };
 
   const handleSave = async () => {

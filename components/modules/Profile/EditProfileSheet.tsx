@@ -6,13 +6,13 @@ import React from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 export default function EditProfileSheet({
-  visible, 
-  setVisible, 
-  pickImage, 
-  formData, 
-  user, 
-  updateField, 
-  isUpdating, 
+  visible,
+  setVisible,
+  pickImage,
+  formData,
+  user,
+  updateField,
+  isUpdating,
   handleSave
 }: any) {
   return (
@@ -21,12 +21,12 @@ export default function EditProfileSheet({
       onClose={() => setVisible(false)}
       snapPoints={["90%"]}
     >
-      <BottomSheetScrollView 
+      <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ 
+        contentContainerStyle={{
           paddingHorizontal: 24,
           paddingTop: 24,
-          paddingBottom: 100 
+          paddingBottom: 100
         }}
       >
         <Text className="text-2xl font-bold mb-6 text-slate-900">Edit Profile</Text>
@@ -169,6 +169,37 @@ export default function EditProfileSheet({
               numberOfLines={4}
               textAlignVertical="top"
               className="text-slate-800 font-medium min-h-[80px]"
+            />
+          </View>
+        </View>
+
+        {/* Company name  */}
+        <View className="mb-4">
+          <Text className="text-slate-600 font-bold text-xs uppercase tracking-wider mb-2">
+            Company Name
+          </Text>
+          <View className="border-b border-slate-200 py-3">
+            <TextInput
+              placeholder="Last Name"
+              value={formData.companyName}
+              onChangeText={(val) => updateField('lastName', val)}
+              className="text-slate-800 font-medium"
+            />
+          </View>
+        </View>
+
+        {/* Graduation Date  */}
+        <View className="mb-4">
+          <Text className="text-slate-600 font-bold text-xs uppercase tracking-wider mb-2">
+            Graduation Date
+          </Text>
+          <View className="flex-row items-center border-b border-slate-200 py-3">
+            <Calendar size={18} color="#64748b" />
+            <TextInput
+              placeholder="YYYY-MM-DD"
+              value={formData.graduationDate}
+              onChangeText={(val) => updateField('graduationDate', val)}
+              className="flex-1 ml-3 text-slate-800 font-medium"
             />
           </View>
         </View>
