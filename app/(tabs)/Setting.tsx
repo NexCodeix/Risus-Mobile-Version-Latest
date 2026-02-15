@@ -1,39 +1,54 @@
-import React from 'react'
 import {
-  View,
-  Text,
+  BarChart2,
+  Bell,
+  Bookmark,
+  ChevronRight,
+  FileText,
+  Hand,
+  HelpCircle,
+  Info,
+  Key,
+  LogOut,
+  PauseCircle,
+  PieChart,
+  Rocket,
+  Search,
+  Trash2,
+  User,
+  Wallet
+} from 'lucide-react-native'
+import React, { useState } from 'react'
+import {
+  ActivityIndicator,
   ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator
+  View
 } from 'react-native'
-import {
-  Search,
-  ChevronRight,
-  Key,
-  Wallet,
-  Hand,
-  BarChart2,
-  Rocket,
-  Bookmark,
-  Bell,
-  PieChart,
-  HelpCircle,
-  FileText,
-  Info,
-  PauseCircle,
-  Trash2,
-  LogOut,
-  User
-} from 'lucide-react-native'
 
-import {useUser} from '@/hooks/useUser'
-import {router} from 'expo-router'
+import AppAlert from '@/components/ui/AppAlert'
 import AppScreen from '@/components/ui/AppScreen'
 import ProfileCard from '@/components/ui/ProfileCard'
+import { useAuth } from '@/hooks/useAuth'
+import { useUser } from '@/hooks/useUser'
+import { router } from 'expo-router'
 
 export default function SettingsScreen() {
-  const {user, isUserLoading} = useUser()
+  const { user, isUserLoading } = useUser()
+  const [visible, setVisible] = useState(false)
+  const { logout } = useAuth()
+
+  const handleLogoutPress = () => {
+    setVisible(true)
+  }
+
+  const confirmLogout = async () => {
+    setVisible(false)
+    await logout()
+    router.replace('/(auth)/signin')
+  }
+
   if (isUserLoading)
     return (
       <View className="flex-1 items-center justify-center bg-white">
@@ -73,6 +88,7 @@ export default function SettingsScreen() {
         <SettingItem
           icon={<User size={20} color="#3b82f6" />}
           title="Edit my profile"
+          onPress={() => router.push("/(routes)/profile")}
         />
         <SettingItem
           icon={<Key size={20} color="#3b82f6" />}
@@ -81,8 +97,8 @@ export default function SettingsScreen() {
         />
         <SettingItem
           icon={<Wallet size={20} color="#3b82f6" />}
-          title="RUSD Balance"
-          subtitle="View your current RUSD holdings"
+          title="RUST Balance"
+          subtitle="View your current RUST holdings"
           onPress={() => router.push('/(routes)/coming-soon')}
         />
         <SettingItem
@@ -160,20 +176,43 @@ export default function SettingsScreen() {
         />
 
         {/* Logout Button */}
-        <TouchableOpacity className="flex-row items-center justify-center border border-red-200 rounded-2xl py-4 my-8">
+        <TouchableOpacity
+          onPress={handleLogoutPress}
+          className="flex-row items-center justify-center border border-red-200 rounded-2xl py-4 my-8"
+        >
           <LogOut size={20} color="#ef4444" className="mr-2" />
           <Text className="text-red-500 font-bold text-lg">Log Out</Text>
         </TouchableOpacity>
 
+
         {/* Added some bottom padding to ensure content doesn't get hidden by your custom tab bar */}
         <View className="h-28" />
+        <AppAlert
+          visible={visible}
+          onClose={() => setVisible(false)}
+          title="Log out?"
+          message="You will need to login again to access your account."
+          buttons={[
+            {
+              text: "Cancel",
+              className: "bg-neutral-700",
+            },
+            {
+              text: "Logout",
+              className: "bg-red-600",
+              textClassName: "text-white",
+              onPress: confirmLogout,
+            },
+          ]}
+        />
+
       </ScrollView>
     </AppScreen>
   )
 }
 
 // Reusable Section Header Component
-const SectionHeader = ({title, color = 'text-gray-900'}: any) => (
+const SectionHeader = ({ title, color = 'text-gray-900' }: any) => (
   <Text className={`text-base font-bold mt-6 mb-2 ${color}`}>{title}</Text>
 )
 
