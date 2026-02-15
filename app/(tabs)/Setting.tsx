@@ -131,14 +131,17 @@ export default function SettingsScreen() {
         <SettingItem
           icon={<HelpCircle size={20} color="#3b82f6" />}
           title="FAQ"
+          onPress={() => router.push("/(routes)/faq")}
         />
         <SettingItem
           icon={<FileText size={20} color="#3b82f6" />}
           title="Terms & Conditions"
+          onPress={() => router.push("/(routes)/terms-conditions")}
         />
         <SettingItem
           icon={<Info size={20} color="#3b82f6" />}
           title="About App"
+          onPress={() => router.push("/(routes)/about-app")}
         />
 
         {/* Deactivating Section */}
