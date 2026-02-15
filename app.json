@@ -45,8 +45,8 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow RISUS to access your photos.",
-          "savePhotosPermission": "Allow RISUS to save photos.",
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true,
           "granularPermissions": ["video", "photo", "audio"]
         }
@@ -54,7 +54,7 @@
       [
         "expo-audio",
         {
-          "microphonePermission": "Allow RISUS to access your microphone."
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
         }
       ],
       [
