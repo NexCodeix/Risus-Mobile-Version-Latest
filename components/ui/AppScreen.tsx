@@ -1,11 +1,12 @@
 /**
  * @component AppScreen
  * @description A versatile screen wrapper for consistent layout and animations.
- * @author 
+ * @author
  * @date 2026-02-11
  */
 
 import {clsx} from 'clsx'
+import {LinearGradient} from 'expo-linear-gradient'
 import React, {useEffect} from 'react'
 import {Keyboard, StatusBar, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {
@@ -29,7 +30,8 @@ export default function AppScreen({
   animateOnFocus = true,
   removeHorizontalPadding = false,
   horizontalPadding = 'px-5',
-  statusBarStyle = 'dark'
+  statusBarStyle = 'dark',
+  isEnableLinearGradient = false
 }: AppScreenProps) {
   const insets = useSafeAreaInsets()
   const isFocused = useIsFocused()
@@ -67,27 +69,35 @@ export default function AppScreen({
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <Animated.View
-        className={clsx('flex-1 ', className)}
-        style={combinedStyle}
-        {...layoutAnimationProps}
-      >
-        <StatusBar
-          barStyle={
-            statusBarStyle === 'dark' ? 'dark-content' : 'light-content'
-          }
-          backgroundColor="transparent"
-          translucent
-        />
-        <View
-          className={clsx(
-            'flex-1',
-            !removeHorizontalPadding && horizontalPadding
-          )}
+      <View style={{flex: 1}}>
+        {isEnableLinearGradient && (
+          <LinearGradient
+            colors={['#E1F2FF', '#E1F4FF', '#FFFFFF']}
+            style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}
+          />
+        )}
+        <Animated.View
+          className={clsx('flex-1 ', className)}
+          style={[combinedStyle, {backgroundColor: 'transparent'}]}
+          {...layoutAnimationProps}
         >
-          {children}
-        </View>
-      </Animated.View>
+          <StatusBar
+            barStyle={
+              statusBarStyle === 'dark' ? 'dark-content' : 'light-content'
+            }
+            backgroundColor="transparent"
+            translucent
+          />
+          <View
+            className={clsx(
+              'flex-1',
+              !removeHorizontalPadding && horizontalPadding
+            )}
+          >
+            {children}
+          </View>
+        </Animated.View>
+      </View>
     </TouchableWithoutFeedback>
   )
 }
