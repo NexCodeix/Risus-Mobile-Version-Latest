@@ -1,5 +1,5 @@
-import * as ImagePicker from 'expo-image-picker';
-import { router } from "expo-router";
+import * as ImagePicker from 'expo-image-picker'
+import {router} from 'expo-router'
 import {
   Briefcase,
   CheckCircle2,
@@ -7,8 +7,8 @@ import {
   GraduationCap,
   Heart,
   MoreVertical
-} from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+} from 'lucide-react-native'
+import React, {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -17,141 +17,146 @@ import {
   Text,
   TouchableOpacity,
   View
-} from "react-native";
-import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+} from 'react-native'
+import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated'
 
-import EditProfileSheet from "@/components/modules/Profile/EditProfileSheet";
-import { useUser } from "@/hooks/useUser";
+import EditProfileSheet from '@/components/modules/Profile/EditProfileSheet'
+import {useUser} from '@/hooks/useUser'
 
 interface FormData {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  dateOfBirth: string;
-  country: string;
-  summary: string;
-  companyName: string;
-  graduationDate: string;
-  achievements: string;
-  image: any;
-  cover_image: any;
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  dateOfBirth: string
+  country: string
+  summary: string
+  companyName: string
+  graduationDate: string
+  achievements: string
+  image: any
+  cover_image: any
 }
 
 export default function ProfileScreen() {
-  const { user, isUserLoading, updateUser, isUpdating } = useUser();
-  const [visible, setVisible] = useState(false);
+  const {user, isUserLoading, updateUser, isUpdating} = useUser()
+  const [visible, setVisible] = useState(false)
   const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    dateOfBirth: "",
-    country: "",
-    summary: "",
-    companyName: "",
-    graduationDate: "",
-    achievements: "",
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    country: '',
+    summary: '',
+    companyName: '',
+    graduationDate: '',
+    achievements: '',
     image: null,
-    cover_image: null,
-  });
+    cover_image: null
+  })
 
   // Initialize form data when user data loads
   useEffect(() => {
     if (user) {
       setFormData({
-        firstName: user.first_name || "",
-        lastName: user.last_name || "",
-        phoneNumber: user.phone_number || "",
-        dateOfBirth: user.date_of_birth || "",
-        country: user.country || "",
-        summary: user.summary || "",
-        companyName: user.company_name || "",
-        graduationDate: user.graduation_date || "",
-        achievements: user.achievements || "",
+        firstName: user.first_name || '',
+        lastName: user.last_name || '',
+        phoneNumber: user.phone_number || '',
+        dateOfBirth: user.date_of_birth || '',
+        country: user.country || '',
+        summary: user.summary || '',
+        companyName: user.company_name || '',
+        graduationDate: user.graduation_date || '',
+        achievements: user.achievements || '',
         image: null,
-        cover_image: null,
-      });
+        cover_image: null
+      })
     }
-  }, [user]);
+  }, [user])
 
   const updateField = (field: keyof FormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+    setFormData((prev) => ({...prev, [field]: value}))
+  }
 
   const pickImage = async (type: 'image' | 'cover_image') => {
     // Request permission (recommended in latest SDK)
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
     if (!permission.granted) {
       Alert.alert(
         'Permission required',
         'We need access to your gallery to upload images.'
-      );
-      return;
+      )
+      return
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'], // ✅ NEW API (replaces MediaTypeOptions.Images)
       allowsEditing: true,
       aspect: type === 'image' ? [1, 1] : [16, 9],
-      quality: 0.8,
-    });
+      quality: 0.8
+    })
 
-    if (result.canceled || !result.assets?.length) return;
+    if (result.canceled || !result.assets?.length) return
 
-    const asset = result.assets[0];
+    const asset = result.assets[0]
 
     const imageData = {
       uri: asset.uri,
       type: asset.mimeType ?? 'image/jpeg',
-      name: `${type}_${Date.now()}.jpg`,
-    };
+      name: `${type}_${Date.now()}.jpg`
+    }
 
-    updateField(type, imageData);
-  };
+    updateField(type, imageData)
+  }
 
   const handleSave = async () => {
     try {
-      const dataToSend = new FormData();
+      const dataToSend = new FormData()
 
       // Append text fields
-      dataToSend.append('firstName', formData.firstName);
-      dataToSend.append('lastName', formData.lastName);
-      if (formData.phoneNumber) dataToSend.append('phoneNumber', formData.phoneNumber);
-      if (formData.dateOfBirth) dataToSend.append('dateOfBirth', formData.dateOfBirth);
-      if (formData.country) dataToSend.append('country', formData.country);
-      if (formData.summary) dataToSend.append('summary', formData.summary);
-      if (formData.companyName) dataToSend.append('companyName', formData.companyName);
-      if (formData.graduationDate) dataToSend.append('graduationDate', formData.graduationDate);
-      if (formData.achievements) dataToSend.append('achievements', formData.achievements);
+      dataToSend.append('firstName', formData.firstName)
+      dataToSend.append('lastName', formData.lastName)
+      if (formData.phoneNumber)
+        dataToSend.append('phoneNumber', formData.phoneNumber)
+      if (formData.dateOfBirth)
+        dataToSend.append('dateOfBirth', formData.dateOfBirth)
+      if (formData.country) dataToSend.append('country', formData.country)
+      if (formData.summary) dataToSend.append('summary', formData.summary)
+      if (formData.companyName)
+        dataToSend.append('companyName', formData.companyName)
+      if (formData.graduationDate)
+        dataToSend.append('graduationDate', formData.graduationDate)
+      if (formData.achievements)
+        dataToSend.append('achievements', formData.achievements)
 
       // Append images
       if (formData.image) {
         dataToSend.append('image', {
           uri: formData.image.uri,
           type: formData.image.type,
-          name: formData.image.name,
-        } as any);
+          name: formData.image.name
+        } as any)
       }
 
       if (formData.cover_image) {
         dataToSend.append('cover_image', {
           uri: formData.cover_image.uri,
           type: formData.cover_image.type,
-          name: formData.cover_image.name,
-        } as any);
+          name: formData.cover_image.name
+        } as any)
       }
 
-      await updateUser(dataToSend as any);
-      Alert.alert("Success", "Profile updated successfully!");
-      setVisible(false);
+      await updateUser(dataToSend as any)
+      Alert.alert('Success', 'Profile updated successfully!')
+      setVisible(false)
 
       // Reset image states
-      updateField('image', null);
-      updateField('cover_image', null);
+      updateField('image', null)
+      updateField('cover_image', null)
     } catch (error: any) {
-      Alert.alert("Error", error.message || "Failed to update profile");
+      Alert.alert('Error', error.message || 'Failed to update profile')
     }
-  };
+  }
 
   /* ================= LOADING ================= */
 
@@ -160,31 +165,30 @@ export default function ProfileScreen() {
       <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator />
       </View>
-    );
+    )
   }
 
-  if (!user) return null;
+  if (!user) return null
 
   /* ================= DERIVED DATA ================= */
 
-  const fullName = `${user.first_name} ${user.last_name}`;
-  const username = `@${user.username}`;
+  const fullName = `${user.first_name} ${user.last_name}`
+  const username = `@${user.username}`
 
   const stats = [
-    { label: "Posts", value: user.total_contribution },
-    { label: "Followers", value: user.total_followers },
-    { label: "Views", value: user.total_views },
-    { label: "Likes", value: user.total_likes },
-  ];
+    {label: 'Posts', value: user.total_contribution},
+    {label: 'Followers', value: user.total_followers},
+    {label: 'Views', value: user.total_views},
+    {label: 'Likes', value: user.total_likes}
+  ]
 
   return (
     <View className="flex-1 bg-white">
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-
         {/* ================= COVER IMAGE ================= */}
         <View className="h-60 w-full relative">
           <Image
-            source={{ uri: formData.cover_image?.uri || user.cover_image }}
+            source={{uri: formData.cover_image?.uri || user.cover_image}}
             className="w-full h-full bg-slate-200"
             resizeMode="cover"
           />
@@ -212,7 +216,7 @@ export default function ProfileScreen() {
             <View className="flex-row items-end justify-between -mt-16 mb-4">
               <View className="p-1 bg-white rounded-full">
                 <Image
-                  source={{ uri: formData.image?.uri || user.image }}
+                  source={{uri: formData.image?.uri || user.image}}
                   className="w-24 h-24 rounded-full bg-slate-100"
                 />
               </View>
@@ -241,9 +245,7 @@ export default function ProfileScreen() {
               <CheckCircle2 size={18} color="#3B82F6" fill="#3B82F6" />
             </View>
 
-            <Text className="text-slate-400 font-medium mb-4">
-              {username}
-            </Text>
+            <Text className="text-slate-400 font-medium mb-4">{username}</Text>
 
             {/* ================= STATS ================= */}
             <View className="flex-row justify-between bg-slate-50 py-4 px-4 rounded-3xl mb-6">
@@ -268,7 +270,7 @@ export default function ProfileScreen() {
                     {user.designation}
                     {user.company_name && (
                       <>
-                        {" @ "}
+                        {' @ '}
                         <Text className="text-blue-600 font-bold">
                           {user.company_name}
                         </Text>
@@ -295,9 +297,7 @@ export default function ProfileScreen() {
 
         {/* ================= POSTS ================= */}
         <View className="mt-8 px-6 mb-32">
-          <Text className="text-lg font-bold text-slate-900 mb-4">
-            Posts
-          </Text>
+          <Text className="text-lg font-bold text-slate-900 mb-4">Posts</Text>
 
           <View className="flex-row flex-wrap justify-between">
             {user.posts?.map((post, index) => (
@@ -342,5 +342,5 @@ export default function ProfileScreen() {
         handleSave={handleSave}
       />
     </View>
-  );
+  )
 }

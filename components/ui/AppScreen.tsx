@@ -26,7 +26,7 @@ export default function AppScreen({
   children,
   className,
   style,
-  animateOnFocus = false,
+  animateOnFocus = true,
   removeHorizontalPadding = false,
   horizontalPadding = 'px-5',
   statusBarStyle = 'dark'
