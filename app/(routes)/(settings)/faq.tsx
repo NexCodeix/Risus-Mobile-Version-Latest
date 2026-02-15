@@ -1,13 +1,15 @@
-import {View, Text} from 'react-native'
+import {Text, View} from 'react-native'
 import React from 'react'
 import AppScreen from '@/components/ui/AppScreen'
 
-export default function CreatePostScreen() {
+const Faq = () => {
   return (
     <AppScreen animateOnFocus isEnableLinearGradient>
       <View>
-        <Text>CreatePostScreen</Text>
+        <Text>Faq</Text>
       </View>
     </AppScreen>
   )
 }
+
+export default Faq

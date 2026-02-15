@@ -1,9 +1,9 @@
 import AppBottomSheet from '@/components/ui/AppBottomSheet'
 import AppButton from '@/components/ui/AppButton'
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { Calendar, Camera, Globe, Phone } from 'lucide-react-native'
+import {BottomSheetScrollView} from '@gorhom/bottom-sheet'
+import {Calendar, Camera, Globe, Phone} from 'lucide-react-native'
 import React from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native'
 
 export default function EditProfileSheet({
   visible,
@@ -19,7 +19,7 @@ export default function EditProfileSheet({
     <AppBottomSheet
       visible={visible}
       onClose={() => setVisible(false)}
-      snapPoints={["90%"]}
+      snapPoints={['90%']}
     >
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
@@ -29,7 +29,9 @@ export default function EditProfileSheet({
           paddingBottom: 100
         }}
       >
-        <Text className="text-2xl font-bold mb-6 text-slate-900">Edit Profile</Text>
+        <Text className="text-2xl font-bold mb-6 text-slate-900">
+          Edit Profile
+        </Text>
 
         {/* Profile Image */}
         <View className="mb-6">
@@ -43,14 +45,16 @@ export default function EditProfileSheet({
             <View className="w-16 h-16 rounded-full bg-slate-200 items-center justify-center mr-4 overflow-hidden">
               {formData.image?.uri || user?.image ? (
                 <Image
-                  source={{ uri: formData.image?.uri || user.image }}
+                  source={{uri: formData.image?.uri || user.image}}
                   className="w-16 h-16"
                 />
               ) : (
                 <Camera size={24} color="#64748b" />
               )}
             </View>
-            <Text className="text-blue-600 font-bold">Change Profile Picture</Text>
+            <Text className="text-blue-600 font-bold">
+              Change Profile Picture
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -65,7 +69,7 @@ export default function EditProfileSheet({
           >
             {formData.cover_image?.uri || user?.cover_image ? (
               <Image
-                source={{ uri: formData.cover_image?.uri || user.cover_image }}
+                source={{uri: formData.cover_image?.uri || user.cover_image}}
                 className="w-full h-full"
                 resizeMode="cover"
               />
@@ -223,10 +227,10 @@ export default function EditProfileSheet({
         </View>
 
         <AppButton
-          title={isUpdating ? "Saving..." : "Save Changes"}
+          title={isUpdating ? 'Saving...' : 'Save Changes'}
           onPress={handleSave}
           disabled={isUpdating}
-          className='text-center py-5 items-center justify-center'
+          className="text-center py-5 items-center justify-center"
         />
       </BottomSheetScrollView>
     </AppBottomSheet>

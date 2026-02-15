@@ -44,7 +44,7 @@ const CHAT_DATA = [
 
 const ChatList = () => {
   return (
-    <AppScreen>
+    <AppScreen isEnableLinearGradient animateOnFocus>
       {/* Header */}
       <View className="py-4 flex-row justify-between items-center">
         <Text className="text-3xl font-bold text-slate-900">Messages</Text>

@@ -26,7 +26,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <AppScreen>
+    <AppScreen  animateOnFocus isEnableLinearGradient >
       <Text className="text-xl font-bold mb-4">
         Welcome {user?.email}
       </Text>
