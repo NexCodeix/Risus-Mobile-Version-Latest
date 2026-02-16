@@ -1,5 +1,5 @@
 import {Feather, Ionicons} from '@expo/vector-icons'
-import {ComponentProps, } from 'react'
+import {ComponentProps, ReactNode, } from 'react'
 import {
   StyleProp,
   TextInputProps,
@@ -109,15 +109,7 @@ export interface AppScreenProps {
   isEnableLinearGradient?: boolean
 }
 
-  children: React.ReactNode;
-  className?: string;
-  style?: StyleProp<ViewStyle>;
-  animateOnFocus?: boolean;
-  removeHorizontalPadding?: boolean;
-  horizontalPadding?: string;
-  statusBarStyle?: 'light' | 'dark';
-  isEnableLinearGradient?: boolean;
-}
+
 
 
 // Common Media Types

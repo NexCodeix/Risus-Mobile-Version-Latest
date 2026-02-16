@@ -1,21 +1,21 @@
-import React from 'react'
+import {Href, router} from 'expo-router'
 import {
-  Key,
-  Wallet,
-  Hand,
   BarChart2,
-  Rocket,
-  Bookmark,
   Bell,
-  PieChart,
-  HelpCircle,
+  Bookmark,
   FileText,
+  Hand,
+  HelpCircle,
   Info,
+  Key,
   PauseCircle,
+  PieChart,
+  Rocket,
   Trash2,
-  User
+  User,
+  Wallet
 } from 'lucide-react-native'
-import {router} from 'expo-router'
+import React from 'react'
 
 // Icon colors
 const ICON_COLORS = {
@@ -25,10 +25,10 @@ const ICON_COLORS = {
 } as const
 
 // Reusable navigation handler
-const navigateTo = (route: string) => () => router.push(route)
+const navigateTo = (route: Href) => () => router.push(route)
 
 // Account section items
-export const ACCOUNT_ITEMS = [
+export const ACCOUNT_ITEMS: SettingItem[] = [
   {
     Icon: User,
     iconProps: {size: 20, color: ICON_COLORS.primary},
@@ -57,7 +57,7 @@ export const ACCOUNT_ITEMS = [
 ]
 
 // Promotions section items
-export const PROMOTIONS_ITEMS = [
+export const PROMOTIONS_ITEMS: SettingItem[] = [
   {
     Icon: Hand,
     iconProps: {size: 20, color: ICON_COLORS.primary},
@@ -82,7 +82,7 @@ export const PROMOTIONS_ITEMS = [
 ]
 
 // General section items
-export const GENERAL_ITEMS = [
+export const GENERAL_ITEMS: SettingItem[] = [
   {
     Icon: Bookmark,
     iconProps: {size: 20, color: ICON_COLORS.primary},
@@ -117,7 +117,7 @@ export const GENERAL_ITEMS = [
 ]
 
 // Account action items
-export const ACCOUNT_ACTION_ITEMS = [
+export const ACCOUNT_ACTION_ITEMS: SettingItem[] = [
   {
     Icon: PauseCircle,
     iconProps: {size: 20, color: ICON_COLORS.warning},
@@ -135,7 +135,21 @@ export const ACCOUNT_ACTION_ITEMS = [
 ]
 
 // Section configuration for easy mapping
-export const SETTINGS_SECTIONS = [
+
+type SettingItem = {
+  Icon: React.ComponentType<any>
+  iconProps: {size: number; color: string}
+  title: string
+  subtitle?: string // Make subtitle optional
+  titleColor?: string
+  onPress?: () => void
+}
+
+export const SETTINGS_SECTIONS: {
+  title: string
+  items: SettingItem[]
+  titleColor?: string
+}[] = [
   {title: 'Account', items: ACCOUNT_ITEMS},
   {title: 'Promotions', items: PROMOTIONS_ITEMS},
   {title: 'General', items: GENERAL_ITEMS},

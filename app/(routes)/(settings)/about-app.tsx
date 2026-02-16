@@ -4,7 +4,6 @@ import { ChevronLeft, Sparkles } from 'lucide-react-native';
 import React from 'react';
 import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 
-const { width } = Dimensions.get('window');
 
 // 1. Data Object for App Information
 const APP_INFO = {
