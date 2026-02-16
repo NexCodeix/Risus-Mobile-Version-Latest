@@ -94,7 +94,7 @@ export default function SettingsScreen() {
 
         {/* Logout Button */}
         {!searchQuery && ( // Only show logout when not searching
-          <TouchableOpacity className="flex-row items-center justify-center border border-red-200 rounded-2xl py-4 my-8">
+          <TouchableOpacity onPress={handleLogoutPress} className="flex-row items-center justify-center border border-red-200 rounded-2xl py-4 my-8">
             <LogOut size={20} color="#ef4444" className="mr-2" />
             <Text className="text-red-500 font-bold text-lg">Log Out</Text>
           </TouchableOpacity>

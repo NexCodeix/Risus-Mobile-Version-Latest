@@ -3,15 +3,6 @@ import { Edit3, Search } from 'lucide-react-native';
 import React from 'react';
 import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-// --- Mock Data (Replace with API later) ---
-const ACTIVE_USERS = [
-  { id: '1', name: 'You', image: 'https://i.pravatar.cc/150?u=me', online: true },
-  { id: '2', name: 'Alex', image: 'https://i.pravatar.cc/150?u=2', online: true },
-  { id: '3', name: 'Sarah', image: 'https://i.pravatar.cc/150?u=3', online: true },
-  { id: '4', name: 'John', image: 'https://i.pravatar.cc/150?u=4', online: true },
-  { id: '5', name: 'Emma', image: 'https://i.pravatar.cc/150?u=5', online: true },
-];
-
 const CHAT_DATA = [
   {
     id: '1',
@@ -65,24 +56,6 @@ const ChatList = () => {
         </View>
       </View>
 
-      {/* Active Now Section */}
-      {/* <View className="mb-6">
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={ACTIVE_USERS}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity className="items-center mr-5">
-              <View>
-                <Image source={{ uri: item.image }} className="w-14 h-14 rounded-full border-2 border-indigo-500 p-1" />
-                {item.online && <View className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />}
-              </View>
-              <Text className="text-xs mt-2 text-slate-500 font-medium">{item.name}</Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View> */}
 
       {/* Conversations List */}
       <FlatList
