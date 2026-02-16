@@ -85,8 +85,28 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         )}
 
+
         {/* Added some bottom padding to ensure content doesn't get hidden by your custom tab bar */}
         <View className="h-28" />
+        <AppAlert
+          visible={visible}
+          onClose={() => setVisible(false)}
+          title="Log out?"
+          message="You will need to login again to access your account."
+          buttons={[
+            {
+              text: "Cancel",
+              className: "bg-neutral-700",
+            },
+            {
+              text: "Logout",
+              className: "bg-red-600",
+              textClassName: "text-white",
+              onPress: confirmLogout,
+            },
+          ]}
+        />
+
       </ScrollView>
     </AppScreen>
   )
