@@ -23,8 +23,8 @@ const WelcomeScreen = () => {
           {/* LOGO SECTION */}
           <Animated.View entering={FadeIn.delay(300)} className="items-center">
             <Image
-              source={require('@/assets/main-header-logo.png')}
-              style={{width: 140, height: 50, resizeMode: 'contain'}}
+              source={require('@/assets/main-header-logo1.png')}
+              style={{width: 150, height: 80, resizeMode: 'contain'}}
             />
             {/* Pagination Dots */}
             {/* <View className="flex-row gap-2 mt-5">

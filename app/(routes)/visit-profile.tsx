@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
+import {Text, View} from 'react-native'
 import React from 'react'
+import AppScreen from '@/components/ui/AppScreen'
 
 const VisitProfile = () => {
   return (
-    <View>
-      <Text>VisitProfile</Text>
-    </View>
+    <AppScreen isEnableLinearGradient animateOnFocus removeHorizontalPadding>
+      <View>
+        <Text>VisitProfile</Text>
+      </View>
+    </AppScreen>
   )
 }
 
 export default VisitProfile
-

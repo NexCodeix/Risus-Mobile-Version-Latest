@@ -72,7 +72,7 @@ export default function AppScreen({
       <View style={{flex: 1}}>
         {isEnableLinearGradient && (
           <LinearGradient
-            colors={['#E1F2FF', '#E1F4FF', '#FFFFFF']}
+            colors={['#E1F2FF', '#FFFFFF', '#FFFFFF']}
             style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}
           />
         )}

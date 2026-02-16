@@ -43,6 +43,7 @@ export default function ComingSoon() {
 
         {/* 3. Main Content */}
         <View className="flex-1 justify-center items-center px-10">
+
           {/* Animated Icon Container */}
           {/* <View className="mb-6 bg-blue-400/10 p-5 rounded-full border border-blue-400/20">
             <Ionicons name="rocket-outline" size={40} color="#22d3ee" />
@@ -75,6 +76,7 @@ export default function ComingSoon() {
             Coming to iOS & Android
           </Text> */}
         </View>
+          </View>
       </SafeAreaView>
     </View>
   );
