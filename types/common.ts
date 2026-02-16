@@ -96,11 +96,12 @@ export type BackButtonProps = {
 //screen types
 export interface AppScreenProps {
   /** The content to be rendered within the screen. */
-  children: ReactNode;
-  className?: string;
-  style?: StyleProp<ViewStyle>;
-  animateOnFocus?: boolean;
-  removeHorizontalPadding?: boolean;
-  horizontalPadding?: string;
-  statusBarStyle?: 'light' | 'dark';
+  children: ReactNode
+  className?: string
+  style?: StyleProp<ViewStyle>
+  animateOnFocus?: boolean
+  removeHorizontalPadding?: boolean
+  horizontalPadding?: string
+  statusBarStyle?: 'light' | 'dark'
+  isEnableLinearGradient?: boolean
 }

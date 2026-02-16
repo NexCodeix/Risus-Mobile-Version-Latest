@@ -14,10 +14,25 @@ import ProfileCard from '@/components/ui/ProfileCard'
 import {ListItem, SectionHeader} from '@/components/ui/List'
 import Input from '@/components/ui/Input'
 import {SETTINGS_SECTIONS} from '@/constants/settings'
+import AppAlert from '@/components/ui/AppAlert'
+import { useAuth } from '@/hooks/useAuth'
+import { AppToast } from '@/components/ui/AppToast'
 
 export default function SettingsScreen() {
   const {user, isUserLoading} = useUser()
   const [searchQuery, setSearchQuery] = useState('')
+  const {logout} = useAuth()
+  const [visible, setVisible] = useState(false)
+
+  const handleLogoutPress = async () =>{
+    setVisible(true)
+  }
+
+  const confirmLogout = async () => {
+    await logout()
+    AppToast.success({title: "Logged Out!", description: "We are waiting for you again."})
+  }
+  
 
   const filteredSections = SETTINGS_SECTIONS.map((section) => ({
     ...section,
