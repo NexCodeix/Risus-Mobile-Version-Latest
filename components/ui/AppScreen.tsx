@@ -1,14 +1,12 @@
 /**
- * @component AppScreen
- * @description A versatile screen wrapper for consistent layout and animations.
- * @author
- * @date 2026-02-11
+ *  AppScreen
+ * Safe with BottomSheetModal + GestureHandler
  */
 
 import {clsx} from 'clsx'
 import {LinearGradient} from 'expo-linear-gradient'
 import React, {useEffect} from 'react'
-import {Keyboard, StatusBar, TouchableWithoutFeedback, View} from 'react-native'
+import {Keyboard, StatusBar, View, TouchableWithoutFeedback} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -21,8 +19,6 @@ import {useIsFocused} from '@react-navigation/native'
 
 import {AppScreenProps} from '@/types/common'
 
-/*  COMPONENT  */
-
 export default function AppScreen({
   children,
   className,
@@ -31,63 +27,78 @@ export default function AppScreen({
   removeHorizontalPadding = false,
   horizontalPadding = 'px-5',
   statusBarStyle = 'dark',
-  isEnableLinearGradient = false
-}: AppScreenProps) {
+  isEnableLinearGradient = false,
+  dismissKeyboardOnPress = true
+}: AppScreenProps & {dismissKeyboardOnPress?: boolean}) {
   const insets = useSafeAreaInsets()
   const isFocused = useIsFocused()
   const opacity = useSharedValue(animateOnFocus ? 0 : 1)
 
-  // Handle focus-based animation for tab screens
   useEffect(() => {
     if (animateOnFocus) {
-      //  withTiming for smooth transition
-      opacity.value = withTiming(isFocused ? 1 : 0, {duration: 300})
+      opacity.value = withTiming(isFocused ? 1 : 0, {duration: 250})
     }
-  }, [isFocused, animateOnFocus, opacity])
+  }, [isFocused])
 
-  const focusAnimatedStyle = useAnimatedStyle(() => ({
+  const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value
   }))
 
-  // Combine custom styles with animated styles
-  const combinedStyle = [
-    {
-      paddingTop: insets.top,
-      paddingBottom: insets.bottom
-    },
-    style,
-    animateOnFocus ? focusAnimatedStyle : {}
-  ]
-
-  // Use layout animations for mount/unmount if not using focus animation
   const layoutAnimationProps = animateOnFocus
     ? {}
     : {
-        entering: FadeIn.duration(300),
+        entering: FadeIn.duration(250),
         exiting: FadeOut.duration(200)
       }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{flex: 1}}>
-        {isEnableLinearGradient && (
-          <LinearGradient
-            colors={['#E1F2FF', '#FFFFFF', '#FFFFFF']}
-            style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}
-          />
-        )}
-        <Animated.View
-          className={clsx('flex-1 ', className)}
-          style={[combinedStyle, {backgroundColor: 'transparent'}]}
-          {...layoutAnimationProps}
-        >
-          <StatusBar
-            barStyle={
-              statusBarStyle === 'dark' ? 'dark-content' : 'light-content'
-            }
-            backgroundColor="transparent"
-            translucent
-          />
+    <View style={{flex: 1}}>
+      {isEnableLinearGradient && (
+        <LinearGradient
+          colors={['#E1F2FF', '#FFFFFF', '#FFFFFF']}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }}
+        />
+      )}
+
+      <Animated.View
+        className={clsx('flex-1', className)}
+        style={[
+          {
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+            backgroundColor: 'transparent'
+          },
+          style,
+          animateOnFocus ? animatedStyle : {}
+        ]}
+        {...layoutAnimationProps}
+      >
+        <StatusBar
+          barStyle={
+            statusBarStyle === 'dark' ? 'dark-content' : 'light-content'
+          }
+          backgroundColor="transparent"
+          translucent
+        />
+
+        {dismissKeyboardOnPress ? (
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View
+              className={clsx(
+                'flex-1',
+                !removeHorizontalPadding && horizontalPadding
+              )}
+            >
+              {children}
+            </View>
+          </TouchableWithoutFeedback>
+        ) : (
           <View
             className={clsx(
               'flex-1',
@@ -96,38 +107,8 @@ export default function AppScreen({
           >
             {children}
           </View>
-        </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+        )}
+      </Animated.View>
+    </View>
   )
 }
-
-/* 
- *
- * ⚠️ IMPORTANT GUIDELINES
- *
- * ✅ USE AppScreen FOR:
- * - Every main screen to ensure consistent padding and safe area handling.
- * - Screens that need fade animations on mount or focus.
- *
- * ❌ DO NOT USE AppScreen FOR:
- * - Content inside a Modal or BottomSheet that already handles safe areas.
- *
- * -----------------------------------------------------
- *
- * 🧠 COMMON PATTERN (RECOMMENDED)
- *
- * <AppScreen>
- *   <AppKeyboardAvoidingView>
- *     ... your content ...
- *   </AppKeyboardAvoidingView>
- * </AppScreen>
- *
- * -----------------------------------------------------
- *
- * 🎨 STYLING
- *
- * - Use `className` for Tailwind CSS classes (e.g., `bg-primary`).
- * - The default background is 'bg-white dark:bg-black'.
- * - Use `horizontalPadding` prop to adjust side padding (e.g., `horizontalPadding="px-4"`).
- */

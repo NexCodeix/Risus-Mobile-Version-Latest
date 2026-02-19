@@ -207,7 +207,11 @@ export interface VideoSource {
     title?: string;
     artist?: string;
     artwork?: string;
+    duration?: number;
+    width?: number;
+    height?: number;
   };
+  cacheKey?: string;
 }
 
 // Chunked video support

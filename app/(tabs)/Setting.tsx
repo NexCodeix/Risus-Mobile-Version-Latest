@@ -16,6 +16,7 @@ import {SETTINGS_SECTIONS} from '@/constants/settings'
 import AppAlert from '@/components/ui/AppAlert'
 import { useAuth } from '@/hooks/useAuth'
 import { AppToast } from '@/components/ui/AppToast'
+import Typo from '@/components/ui/Typo'
 
 export default function SettingsScreen() {
   const {user, isUserLoading} = useUser()
@@ -56,9 +57,9 @@ export default function SettingsScreen() {
     <AppScreen animateOnFocus isEnableLinearGradient>
       {/* Header */}
       <View className="flex-row items-center px-4 py-3">
-        <Text className="flex-1 text-center text-lg font-bold mr-6">
+        <Typo size={20} className="flex-1 text-center text-lg font-bold mr-6">
           Settings
-        </Text>
+        </Typo>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="px-4">

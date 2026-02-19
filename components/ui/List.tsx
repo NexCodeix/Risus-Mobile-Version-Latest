@@ -1,8 +1,8 @@
 import {ChevronRight} from 'lucide-react-native'
 import React from 'react'
 import {View, TouchableOpacity} from 'react-native'
-import Typo from './Typo' // Import Typo component
-import { verticalScale } from '@/lib/styling'
+import Typo from './Typo' 
+
 
 interface SectionHeaderProps {
   title: string
@@ -40,9 +40,15 @@ export const ListItem = ({
     <View className="w-10 h-10 bg-blue-50/50 rounded-full items-center justify-center">
       {Icon && <Icon {...iconProps} />}
     </View>
-    <View  className="ml-4 flex-1">
-      <Typo size={verticalScale(11)} className={`text-base font-medium ${titleColor}`}>{title}</Typo>
-      {subtitle && <Typo size={verticalScale(10)} className="text-gray-400 text-sm">{subtitle}</Typo>}
+    <View className="ml-4 flex-1">
+      <Typo size={14} className={`text-base font-medium ${titleColor}`}>
+        {title}
+      </Typo>
+      {subtitle && (
+        <Typo size={12} className="text-gray-400 text-sm">
+          {subtitle}
+        </Typo>
+      )}
     </View>
     <ChevronRight size={18} color="#cbd5e1" />
   </TouchableOpacity>

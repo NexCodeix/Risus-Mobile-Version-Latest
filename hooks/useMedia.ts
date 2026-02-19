@@ -20,7 +20,10 @@ export function useMediaOrientation(): MediaOrientation {
   }, [])
 
   useEffect(() => {
-    const subscription = Dimensions.addEventListener('change', updateOrientation)
+    const subscription = Dimensions.addEventListener(
+      'change',
+      updateOrientation
+    )
     return () => subscription?.remove()
   }, [updateOrientation])
 
