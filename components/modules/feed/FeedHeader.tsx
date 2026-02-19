@@ -1,9 +1,9 @@
-import {useState} from 'react'
-import {useCurrentUser, useNotifications} from '@/hooks/useFeedApi'
-import {router} from 'expo-router'
-import {Bell, Compass, Flame, Search, WandSparkles} from 'lucide-react-native'
-import {Image, View, TouchableOpacity, Dimensions} from 'react-native'
-import Typo from '../ui/Typo'
+import { useCurrentUser, useNotifications } from '@/hooks/useFeedApi'
+import { router } from 'expo-router'
+import { Bell, Compass, Flame, Search, WandSparkles } from 'lucide-react-native'
+import { useState } from 'react'
+import { Dimensions, Image, TouchableOpacity, View } from 'react-native'
+import Typo from '../../ui/Typo'
 
 const {width} = Dimensions.get('window')
 

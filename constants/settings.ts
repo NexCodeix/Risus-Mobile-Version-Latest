@@ -86,12 +86,14 @@ export const GENERAL_ITEMS: SettingItem[] = [
   {
     Icon: Bookmark,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'Bookmarks'
+    title: 'Bookmarks',
+    onPress: navigateTo('/bookmarks')
   },
   {
     Icon: Bell,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'Notifications'
+    title: 'Notifications',
+     onPress: navigateTo('/notification')
   },
   {
     Icon: PieChart,

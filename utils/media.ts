@@ -4,7 +4,7 @@ import {
   AspectRatio,
   ChunkedVideoSource,
   VideoChunk
-} from '../types/common' 
+} from '../types/common'
 import {Dimensions} from 'react-native'
 
 const SCREEN_WIDTH = Dimensions.get('window').width

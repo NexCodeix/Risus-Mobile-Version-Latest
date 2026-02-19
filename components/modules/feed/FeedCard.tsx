@@ -1,24 +1,21 @@
-/**
- * FIXED FeedCard - Proper Image Rendering & UI
- * File: components/feed/FeedCard.tsx
- */
 
-import {OptimizedImage} from '@/components/ui/OptimizedImage'
-import {OptimizedVideo} from '@/components/ui/OptimizedVideo'
-import {useLikePost} from '@/hooks/useFeedApi'
-import {Post} from '@/types/feed'
-import {Ionicons} from '@expo/vector-icons'
-import {useState} from 'react'
+
+import { OptimizedImage } from '@/components/ui/OptimizedImage'
+import { OptimizedVideo } from '@/components/ui/OptimizedVideo'
+import { useLikePost } from '@/hooks/useFeedApi'
+import { Post } from '@/types/feed'
+import { Ionicons } from '@expo/vector-icons'
+import { useState } from 'react'
 import {
-  Dimensions,
-  Image,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View
+    Dimensions,
+    Image,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
 } from 'react-native'
-import Animated, {FadeIn} from 'react-native-reanimated'
-import Typo from '../ui/Typo'
+import Animated, { FadeIn } from 'react-native-reanimated'
+import Typo from '../../ui/Typo'
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -171,10 +168,10 @@ export function FeedCard({post, onRepostPress}: FeedCardProps) {
 
       {/* Content Overlay - Bottom */}
       {post.content && (
-        <View className="absolute bottom-10 left-4 right-20  ">
-          <Typo  size={16} className="text-white py-1 leading-5" >
+        <View className="absolute bottom-10 left-4 right-20   ">
+          <Typo size={16} className="text-white py-1 leading-5">
             {post.title}
-          </Typo >
+          </Typo>
           {post.content.length > 100 && (
             <Text className="text-blue-300 text-xs mt-1 font-medium">
               Read More

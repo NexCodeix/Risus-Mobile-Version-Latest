@@ -183,8 +183,8 @@ export default function ProfileScreen() {
   const username = `@${user.username}`
   const stats = [
     {label: 'Posts', value: user.total_contribution},
-    {label: 'Followers', value: user.total_followers},
-    {label: 'Views', value: user.total_views},
+    {label: 'Ping', value: user.total_followers},
+    {label: 'Pings', value: user.total_views},
     {label: 'Likes', value: user.total_likes}
   ]
 

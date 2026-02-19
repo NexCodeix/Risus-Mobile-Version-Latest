@@ -14,8 +14,8 @@ import {ListItem, SectionHeader} from '@/components/ui/List'
 import Input from '@/components/ui/Input'
 import {SETTINGS_SECTIONS} from '@/constants/settings'
 import AppAlert from '@/components/ui/AppAlert'
-import { useAuth } from '@/hooks/useAuth'
-import { AppToast } from '@/components/ui/AppToast'
+import {useAuth} from '@/hooks/useAuth'
+import {AppToast} from '@/components/ui/AppToast'
 import Typo from '@/components/ui/Typo'
 
 export default function SettingsScreen() {
@@ -24,15 +24,17 @@ export default function SettingsScreen() {
   const {logout} = useAuth()
   const [visible, setVisible] = useState(false)
 
-  const handleLogoutPress = async () =>{
+  const handleLogoutPress = async () => {
     setVisible(true)
   }
 
   const confirmLogout = async () => {
     await logout()
-    AppToast.success({title: "Logged Out!", description: "We are waiting for you again."})
+    AppToast.success({
+      title: 'Logged Out!',
+      description: 'We are waiting for you again.'
+    })
   }
-  
 
   const filteredSections = SETTINGS_SECTIONS.map((section) => ({
     ...section,
@@ -94,7 +96,10 @@ export default function SettingsScreen() {
 
         {/* Logout Button */}
         {!searchQuery && ( // Only show logout when not searching
-          <TouchableOpacity onPress={handleLogoutPress} className="flex-row items-center justify-center border border-red-200 rounded-2xl py-4 my-8">
+          <TouchableOpacity
+            onPress={handleLogoutPress}
+            className="flex-row items-center justify-center border border-red-200 rounded-2xl py-4 my-8"
+          >
             <LogOut size={20} color="#ef4444" className="mr-2" />
             <Text className="text-red-500 font-bold text-lg">Log Out</Text>
           </TouchableOpacity>
