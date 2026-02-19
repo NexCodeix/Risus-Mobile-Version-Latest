@@ -1,4 +1,5 @@
 import AppScreen from '@/components/ui/AppScreen';
+import { router } from 'expo-router';
 import { ArrowLeft, Info, Pencil, Ticket, User } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -41,10 +42,10 @@ const termsData = [
 
 const TermsConditionsScreen = () => {
     return (
-        <AppScreen>
+        <AppScreen animateOnFocus isEnableLinearGradient>
             {/* Header */}
             <View className="flex-row items-center py-4 border-b border-gray-100">
-                <TouchableOpacity className="mr-4">
+                <TouchableOpacity onPress={() => router.back()} className="mr-4">
                     <ArrowLeft color="#000" size={24} />
                 </TouchableOpacity>
                 <Text className="text-xl font-bold text-black">Terms & Conditions</Text>

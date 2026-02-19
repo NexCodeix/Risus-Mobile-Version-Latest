@@ -32,7 +32,8 @@ export const ACCOUNT_ITEMS: SettingItem[] = [
   {
     Icon: User,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'Edit my profile'
+    title: 'Edit my profile',
+    onPress: navigateTo('/(routes)/(settings)/profile')
   },
   {
     Icon: Key,
@@ -102,17 +103,20 @@ export const GENERAL_ITEMS: SettingItem[] = [
   {
     Icon: HelpCircle,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'FAQ'
+    title: 'FAQ',
+    onPress: navigateTo('/(routes)/(settings)/faq')
   },
   {
     Icon: FileText,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'Terms & Conditions'
+    title: 'Terms & Conditions',
+    onPress: navigateTo('/(routes)/(settings)/terms-conditions')
   },
   {
     Icon: Info,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'About App'
+    title: 'About App',
+    onPress: navigateTo('/(routes)/(settings)/about-app')
   }
 ]
 

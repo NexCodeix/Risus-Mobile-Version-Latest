@@ -44,10 +44,10 @@ const ProfileCard = ({
   return (
     <TouchableOpacity
       className={clsx(
-        'flex-row items-center p-4  bg-gray-100 rounded-2xl border border-border',
+        'flex-row items-center p-4  bg-white rounded-2xl border border-border',
         cardClassName
       )}
-      onPress={() => router.push('/(routes)/profile')}
+      onPress={() => router.push('/(routes)/(settings)/profile')}
     >
       <Avatar
         source={user?.image}

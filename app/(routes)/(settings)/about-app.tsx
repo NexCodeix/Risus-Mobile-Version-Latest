@@ -22,7 +22,7 @@ const APP_INFO = {
 
 const AboutScreen = () => {
     return (
-        <AppScreen>
+        <AppScreen animateOnFocus isEnableLinearGradient>
             {/* --- Decorative Background Shapes --- */}
             {/* Top Left Circle */}
             <View

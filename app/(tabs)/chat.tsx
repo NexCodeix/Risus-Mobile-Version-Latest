@@ -1,4 +1,6 @@
 import AppScreen from '@/components/ui/AppScreen';
+import { api } from '@/lib/axios';
+import { useQuery } from '@tanstack/react-query';
 import { Edit3, Search } from 'lucide-react-native';
 import React from 'react';
 import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -34,6 +36,32 @@ const CHAT_DATA = [
 ];
 
 const ChatList = () => {
+  const { data: chatList } = useQuery({
+    queryKey: ["chatList"],
+    queryFn: async () => {
+      try {
+        const res = await api.get("/rooms/")
+        return res.data ?? []
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  })
+
+  const { data: onlineUsers } = useQuery({
+    queryKey: ["onlineUsers"],
+    queryFn: async () => {
+      try {
+        const res = await api.get("/online-users/")
+        return res.data ?? []
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  })
+
+  console.log("chatList", chatList)
+  console.log("onlineUsers", onlineUsers)
   return (
     <AppScreen isEnableLinearGradient animateOnFocus>
       {/* Header */}

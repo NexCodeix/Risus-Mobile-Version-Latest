@@ -1,22 +1,22 @@
-import React, {useState} from 'react'
+import { LogOut } from 'lucide-react-native'
+import React, { useState } from 'react'
 import {
-  View,
-  Text,
+  ActivityIndicator,
   ScrollView,
+  Text,
   TouchableOpacity,
-  ActivityIndicator
+  View
 } from 'react-native'
-import {LogOut} from 'lucide-react-native'
 
-import {useUser} from '@/hooks/useUser'
-import AppScreen from '@/components/ui/AppScreen'
-import ProfileCard from '@/components/ui/ProfileCard'
-import {ListItem, SectionHeader} from '@/components/ui/List'
-import Input from '@/components/ui/Input'
-import {SETTINGS_SECTIONS} from '@/constants/settings'
 import AppAlert from '@/components/ui/AppAlert'
-import { useAuth } from '@/hooks/useAuth'
+import AppScreen from '@/components/ui/AppScreen'
 import { AppToast } from '@/components/ui/AppToast'
+import Input from '@/components/ui/Input'
+import { ListItem, SectionHeader } from '@/components/ui/List'
+import ProfileCard from '@/components/ui/ProfileCard'
+import { SETTINGS_SECTIONS } from '@/constants/settings'
+import { useAuth } from '@/hooks/useAuth'
+import { useUser } from '@/hooks/useUser'
 
 export default function SettingsScreen() {
   const {user, isUserLoading} = useUser()
@@ -56,7 +56,7 @@ export default function SettingsScreen() {
   return (
     <AppScreen animateOnFocus isEnableLinearGradient>
       {/* Header */}
-      <View className="flex-row items-center px-4 py-3">
+      <View className="flex-row items-center  py-3">
         <Text className="flex-1 text-center text-lg font-bold mr-6">
           Settings
         </Text>
@@ -77,7 +77,7 @@ export default function SettingsScreen() {
           <ProfileCard
             user={user}
             isLoading={isUserLoading}
-            cardClassName="bg-white/30 border border-white/40 mb-4"
+            cardClassName="bg-white border border-white/40 mb-4"
             textClass="text-black"
           />
         )}
