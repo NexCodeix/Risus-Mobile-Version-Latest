@@ -1,5 +1,4 @@
-import {useAuthStore} from '@/store/useAuthStore'
-import {getToken} from '@/utils/storage'
+import {clearToken, getToken} from '@/utils/storage'
 import axios from 'axios'
 
 /* ================= CONFIG ================= */
@@ -20,6 +19,8 @@ const log = (...args: any[]) => ENABLE_API_LOGS && console.log(...args)
 
 const divider = () =>
   ENABLE_API_LOGS && console.log('────────────────────────────')
+
+let isHandlingUnauthorized = false
 
 /* ================= REQUEST ================= */
 
@@ -54,7 +55,7 @@ api.interceptors.response.use(
     return res
   },
 
-  async (error) => {
+  (error) => {
     const status = error.response?.status ?? 0
 
     const normalizedError = {
@@ -72,7 +73,14 @@ api.interceptors.response.use(
        👉 Force logout on unauthorized
       */
     if (status === 401) {
-      const logout = useAuthStore.getState().logout
+      if (!isHandlingUnauthorized) {
+        isHandlingUnauthorized = true
+        clearToken()
+
+        setTimeout(() => {
+          isHandlingUnauthorized = false
+        }, 300)
+      }
     }
 
     divider()

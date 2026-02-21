@@ -1,29 +1,29 @@
-import {zodResolver} from '@hookform/resolvers/zod'
-import {BlurView} from 'expo-blur'
-import {LinearGradient} from 'expo-linear-gradient'
-import {router} from 'expo-router'
-import React, {useState} from 'react'
-import {Controller, useForm} from 'react-hook-form'
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native'
-import Animated, {FadeInDown} from 'react-native-reanimated'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { BlurView } from 'expo-blur'
+import { LinearGradient } from 'expo-linear-gradient'
+import { router } from 'expo-router'
+import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 // Logic Imports
 import AppKeyboardAvoidingView from '@/components/ui/AppKeyboardAvoidingView'
 import AppScreen from '@/components/ui/AppScreen'
-import {AppToast} from '@/components/ui/AppToast'
+import { AppToast } from '@/components/ui/AppToast'
 import BackButton from '@/components/ui/BackButton'
 import Input from '@/components/ui/Input'
-import {useAuth} from '@/hooks/useAuth'
-import {SignInForm, SignInSchema} from '@/validate/auth'
+import { useAuth } from '@/hooks/useAuth'
+import { SignInForm, SignInSchema } from '@/validate/auth'
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false)
-  const { login, isLoginLoading, googleLogin, isGoogleLoginLoading } = useAuth()
+  const { login, isLoginLoading, googleSignIn, isGoogleLoginLoading, isGooglePromptReady } = useAuth()
 
   const {
     control,
     handleSubmit,
-    formState: {errors}
+    formState: { errors }
   } = useForm<SignInForm>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
@@ -36,7 +36,7 @@ export default function SignIn() {
     try {
       setIsLoading(true)
 
-      await login({email: data.email, password: data.password})
+      await login({ email: data.email, password: data.password })
 
       AppToast.success({
         title: 'Login successful!',
@@ -57,10 +57,22 @@ export default function SignIn() {
 
   const handleGoogleLogin = async () => {
     try {
-      const res = await googleLogin()
-      console.log(res)
-    } catch (error) {
-      console.log(error)
+      await googleSignIn()
+      AppToast.success({
+        title: 'Login successful!',
+        description: 'Welcome back to Risus.'
+      })
+      router.replace('/(tabs)')
+    } catch (err: any) {
+      console.log(err)
+      const message = err?.message === 'Google sign in was cancelled'
+        ? 'Google sign in cancelled'
+        : 'Failed to sign in with Google. Please try again.'
+
+      AppToast.error({
+        title: 'Google sign in failed',
+        description: message
+      })
     }
   }
 
@@ -69,14 +81,14 @@ export default function SignIn() {
       {/* 1. BACKGROUND GRADIENT (Matches your design) */}
       <LinearGradient
         colors={['#CCFBF1', '#E0F2FE', '#F1F5F9']}
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
         className="absolute inset-0"
       />
 
       <AppScreen animateOnFocus>
         <AppKeyboardAvoidingView>
-          <ScrollView contentContainerStyle={{flexGrow: 1}} bounces={false}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} bounces={false}>
             {/* 2. TOP NAVIGATION BAR */}
             <View className="flex-row items-center justify-between pt-5 pb-4">
               <BackButton />
@@ -100,7 +112,7 @@ export default function SignIn() {
               >
                 <Image
                   source={require('@/assets/main-header-logo1.png')}
-                  style={{width: 150, height: 70, resizeMode: 'contain'}}
+                  style={{ width: 150, height: 70, resizeMode: 'contain' }}
                 />
               </Animated.View>
 
@@ -124,7 +136,7 @@ export default function SignIn() {
                   <Controller
                     control={control}
                     name="email"
-                    render={({field: {onChange, onBlur, value}}) => (
+                    render={({ field: { onChange, onBlur, value } }) => (
                       <Input
                         label="Email Address"
                         leftIcon="mail"
@@ -142,7 +154,7 @@ export default function SignIn() {
                   <Controller
                     control={control}
                     name="password"
-                    render={({field: {onChange, onBlur, value}}) => (
+                    render={({ field: { onChange, onBlur, value } }) => (
                       <Input
                         label="Password"
                         leftIcon="lock"
@@ -191,7 +203,11 @@ export default function SignIn() {
                   </View>
 
                   {/* GOOGLE SIGN IN (Placeholder Design) */}
-                  <TouchableOpacity onPress={handleGoogleLogin} className="flex-row items-center justify-center border border-slate-200 py-4 rounded-2xl bg-white/50">
+                  <TouchableOpacity
+                    onPress={handleGoogleLogin}
+                    disabled={!isGooglePromptReady || isGoogleLoginLoading}
+                    className="flex-row items-center justify-center border border-slate-200 py-4 rounded-2xl bg-white/50"
+                  >
                     <Image
                       source={{
                         uri: 'https://img.icons8.com/?size=100&id=V5cGWnc9R4xj&format=png&color=000000'
@@ -199,7 +215,7 @@ export default function SignIn() {
                       className="size-6 mr-3"
                     />
                     <Text className="text-slate-700 font-bold">
-                      Sign in with Google
+                      {isGoogleLoginLoading ? 'Signing in...' : 'Sign in with Google'}
                     </Text>
                   </TouchableOpacity>
                 </BlurView>

@@ -7,6 +7,7 @@ export const storage = createMMKV({
 
 /* Token Keys */
 const ACCESS = 'access_token'
+const USER_INFO = 'user_info'
 
 /* Helpers */
 
@@ -23,4 +24,9 @@ console.log('MMKV token:', getToken())
 
 export const clearToken = () => {
   storage.remove(ACCESS)
+}
+
+// Google login
+export const setUserInfo = (userInfo: any) => {
+  storage.set(USER_INFO, JSON.stringify(userInfo))
 }

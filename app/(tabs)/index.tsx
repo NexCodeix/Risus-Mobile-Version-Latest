@@ -15,7 +15,7 @@ const {width: SCREEN_WIDTH} = Dimensions.get('window')
 
 export default function HomeScreen() {
   const {data, fetchNextPage, hasNextPage, isLoading, refetch} = useFeed()
-  console.log('feed data', data)
+  // console.log('feed data', data)
   const scrollX = useSharedValue(0)
   const translateY = useSharedValue(0)
 

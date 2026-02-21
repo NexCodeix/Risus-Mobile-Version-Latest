@@ -1,31 +1,61 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
-import { setToken, clearToken } from "@/utils/storage";
+import {api} from '@/lib/axios'
+import {clearToken, setToken, setUserInfo} from '@/utils/storage'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
+import * as Google from 'expo-auth-session/providers/google'
+import {useState} from 'react'
+import {Platform} from 'react-native'
 
 /* ================= TYPES ================= */
 
 type LoginPayload = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
 
 type SignupPayload = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string;
-  password1: string;
-  password2: string;
-};
+  first_name: string
+  last_name: string
+  email: string
+  phone_number: string
+  password1: string
+  password2: string
+}
 
 type ForgotPasswordPayload = {
-  email: string;
-};
+  email: string
+}
+
+type GoogleUserInfo = {
+  id: string
+  email: string
+  name: string
+}
+
+const googleConfig = Platform.select({
+  ios: {
+    iosClientId:
+      '648777206637-hguiupk76aio67enkivt3rubkmg7qfof.apps.googleusercontent.com',
+    scopes: ['profile', 'email']
+  },
+  android: {
+    androidClientId:
+      '648777206637-ffiqpumuoecbqrmt2c7pv468oc8l07rt.apps.googleusercontent.com',
+    scopes: ['profile', 'email']
+  },
+  default: {
+    webClientId:
+      '648777206637-3v7v5978um0bgrc63eij8t0ab350deu0.apps.googleusercontent.com',
+    scopes: ['profile', 'email']
+  }
+})
 
 /* ================= HOOK ================= */
 
 export const useAuth = () => {
   const queryClient = useQueryClient()
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false)
+  const [googleRequest, , googlePromptAsync] =
+    Google.useAuthRequest(googleConfig)
 
   /* ================= LOGIN ================= */
 
@@ -55,19 +85,62 @@ export const useAuth = () => {
   })
 
   /* ================= Google Login ================= */
-  const googleLoginMutation = useMutation({
-    mutationFn: async () => {
-      const res = await api.post('user/google-login/')
-      return res.data
-    },
-    onSuccess: (data) => {
-      if (data.access_token) {
-        setToken(data.access_token)
-      } else {
-        console.log('Token not found on google login')
-      }
+  const googleSignIn = async () => {
+    const authResult = await googlePromptAsync()
+
+    if (authResult.type !== 'success') {
+      throw new Error('Google sign in was cancelled')
     }
-  })
+
+    const accessToken = authResult.authentication?.accessToken
+
+    if (!accessToken) {
+      throw new Error('Google access token is missing')
+    }
+
+    setIsGoogleLoginLoading(true)
+
+    try {
+      const profileRes = await fetch(
+        'https://www.googleapis.com/userinfo/v2/me',
+        {
+          headers: {Authorization: `Bearer ${accessToken}`}
+        }
+      )
+
+      const userInfo = (await profileRes.json()) as GoogleUserInfo
+
+      if (!userInfo?.email) {
+        throw new Error('Failed to fetch Google user info')
+      }
+
+      setUserInfo(userInfo)
+
+      const backendResponse = await api.post('/user/google-login/', {
+        access_token: accessToken,
+        user_type: '2',
+        user_data: {
+          email: userInfo.email,
+          googleId: userInfo.id,
+          name: userInfo.name
+        },
+        google_loggedin_data: {
+          userInfo
+        }
+      })
+
+      const token = backendResponse?.data?.key
+
+      if (!token) {
+        throw new Error('Token not found on google login')
+      }
+
+      setToken(token)
+      return backendResponse.data
+    } finally {
+      setIsGoogleLoginLoading(false)
+    }
+  }
   /* ================= FORGOT PASSWORD ================= */
 
   const forgotPasswordMutation = useMutation({
@@ -88,8 +161,9 @@ export const useAuth = () => {
     // login
     login: loginMutation.mutateAsync,
     isLoginLoading: loginMutation.isPending,
-    googleLogin: googleLoginMutation.mutateAsync,
-    isGoogleLoginLoading: googleLoginMutation.isPending,
+    googleSignIn,
+    isGoogleLoginLoading,
+    isGooglePromptReady: Boolean(googleRequest),
 
     // signup
     signup: signupMutation.mutateAsync,
@@ -102,4 +176,4 @@ export const useAuth = () => {
     // logout
     logout
   }
-};
+}

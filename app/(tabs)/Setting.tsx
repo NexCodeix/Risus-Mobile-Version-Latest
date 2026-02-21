@@ -17,6 +17,7 @@ import {useAuth} from '@/hooks/useAuth'
 import {AppToast} from '@/components/ui/AppToast'
 import Typo from '@/components/ui/Typo'
 import { SETTINGS_SECTIONS } from '@/constants/settings'
+import { router } from 'expo-router'
 
 export default function SettingsScreen() {
   const {user, isUserLoading} = useUser()
@@ -34,6 +35,7 @@ export default function SettingsScreen() {
       title: 'Logged Out!',
       description: 'We are waiting for you again.'
     })
+    router.replace("/(auth)/welcome")
   }
 
   const filteredSections = SETTINGS_SECTIONS.map((section) => ({

@@ -1,94 +1,75 @@
 import AppScreen from '@/components/ui/AppScreen';
 import { api } from '@/lib/axios';
+import { smartTime } from '@/utils/Time';
 import { useQuery } from '@tanstack/react-query';
 import { Edit3, Search } from 'lucide-react-native';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-const CHAT_DATA = [
-  {
-    id: '1',
-    name: 'Alex Rivera',
-    lastMessage: 'The new design looks amazing! 🔥',
-    time: '2m ago',
-    unread: 2,
-    image: 'https://i.pravatar.cc/150?u=2',
-    online: true,
-  },
-  {
-    id: '2',
-    name: 'Sarah Jenkins',
-    lastMessage: 'Are we still meeting at 5?',
-    time: '1h ago',
-    unread: 0,
-    image: 'https://i.pravatar.cc/150?u=3',
-    online: false,
-  },
-  {
-    id: '3',
-    name: 'NexCodeix Support',
-    lastMessage: 'Your ticket #102 has been resolved.',
-    time: '3h ago',
-    unread: 0,
-    image: 'https://i.pravatar.cc/150?u=9',
-    online: true,
-  },
-];
+type GroupListResponse = {
+  count?: number;
+  next?: string | null;
+  previous?: string | null;
+  results?: GroupRoomItem[];
+};
+
+type GroupRoomItem = {
+  id: string;
+  group?: {
+    id?: string;
+    name?: string | null;
+    timestamp?: string | null;
+    post?: {
+      title?: string | null;
+      content?: string | null;
+      user?: {
+        image?: string | null;
+      };
+    } | null;
+  } | null;
+  last_message?: {
+    content?: string | null;
+    timestamp?: string | null;
+    user?: {
+      image?: string | null;
+    };
+  } | null;
+};
 
 const ChatList = () => {
-  const { data: chatList } = useQuery({
-    queryKey: ["chatList"],
-    queryFn: async () => {
-      try {
-        const res = await api.get("/rooms/")
-        return res.data ?? []
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  })
+  const [searchText, setSearchText] = useState('');
 
-  const { data: onlineUsers } = useQuery({
-    queryKey: ["onlineUsers"],
-    queryFn: async () => {
-      try {
-        const res = await api.get("/online-users/")
-        return res.data ?? []
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  })
-  const { data: roomList } = useQuery({
-    queryKey: ["roomList"],
-    queryFn: async () => {
-      try {
-        const res = await api.get("/rooms/")
-        return res.data ?? []
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  })
   const { data: groupList } = useQuery({
-    queryKey: ["roomList"],
+    queryKey: ["groupList"],
     queryFn: async () => {
       try {
-        const res = await api.get("/rooms/?q=group")
-        return res.data ?? []
+        const res = await api.get("/rooms/?q=group");
+        return (res.data ?? {}) as GroupListResponse;
       } catch (error) {
-        console.log(error)
+        console.log(error);
+        return { results: [] } as GroupListResponse;
       }
     }
-  })
+  });
+
+  const rooms = useMemo(() => {
+    const query = searchText.trim().toLowerCase();
+    const list = groupList?.results ?? [];
+
+    if (!query) return list;
+
+    return list.filter((item) => {
+      const name = (item.group?.name ?? item.group?.post?.title ?? '').toLowerCase();
+      const lastMessage = (item.last_message?.content ?? item.group?.post?.content ?? '').toLowerCase();
+      return name.includes(query) || lastMessage.includes(query);
+    });
+  }, [groupList?.results, searchText]);
 
   // const wsUrl = `${BASE_SOCKET_URL}/chat/?token=${token}`;
   // const response = await fetch(`${BASE_URL}/api/rooms/${inbox.id}/messages/`)
 
-  console.log("chatList", chatList)
-  console.log("onlineUsers", onlineUsers)
-  console.log("roomList", roomList)
-  console.log("groupList", groupList)
+  // console.log("groupList", JSON.stringify(groupList?.results, null, 2))
+
   return (
     <AppScreen isEnableLinearGradient animateOnFocus>
       {/* Header */}
@@ -107,6 +88,8 @@ const ChatList = () => {
             placeholder="Search messages..."
             className="flex-1 ml-3 text-slate-700 font-medium"
             placeholderTextColor="#94a3b8"
+            value={searchText}
+            onChangeText={setSearchText}
           />
         </View>
       </View>
@@ -114,29 +97,41 @@ const ChatList = () => {
 
       {/* Conversations List */}
       <FlatList
-        data={CHAT_DATA}
+        data={rooms}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity className="flex-row items-center mb-6">
-            <Image source={{ uri: item.image }} className="w-16 h-16 rounded-2xl" />
+            <Image
+              source={{
+                uri:
+                  item.last_message?.user?.image ??
+                  item.group?.post?.user?.image ??
+                  'https://i.pravatar.cc/150?u=group-room',
+              }}
+              className="w-16 h-16 rounded-2xl"
+            />
             <View className="flex-1 ml-4 border-b border-slate-50 pb-4">
               <View className="flex-row justify-between items-center mb-1">
-                <Text className="text-lg font-bold text-slate-800">{item.name}</Text>
-                <Text className="text-xs text-slate-400 font-medium">{item.time}</Text>
+                <Text className="text-lg font-bold text-slate-800" numberOfLines={1}>
+                  {item.group?.name ?? item.group?.post?.title ?? 'Untitled Group'}
+                </Text>
+                <Text className="text-xs text-slate-400 font-medium">
+                  {smartTime(item.last_message?.timestamp ?? item.group?.timestamp ?? '')}
+                </Text>
               </View>
               <View className="flex-row justify-between items-center">
                 <Text className="text-slate-500 flex-1 mr-2" numberOfLines={1}>
-                  {item.lastMessage}
+                  {item.last_message?.content ?? item.group?.post?.content ?? 'No messages yet'}
                 </Text>
-                {item.unread > 0 && (
-                  <View className="bg-indigo-500 px-2 py-1 rounded-full">
-                    <Text className="text-[10px] text-white font-bold">{item.unread}</Text>
-                  </View>
-                )}
               </View>
             </View>
           </TouchableOpacity>
         )}
+        ListEmptyComponent={
+          <View className="py-12 items-center">
+            <Text className="text-slate-500 font-medium">No groups found</Text>
+          </View>
+        }
       />
     </AppScreen>
   );
