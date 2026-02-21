@@ -59,9 +59,36 @@ const ChatList = () => {
       }
     }
   })
+  const { data: roomList } = useQuery({
+    queryKey: ["roomList"],
+    queryFn: async () => {
+      try {
+        const res = await api.get("/rooms/")
+        return res.data ?? []
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  })
+  const { data: groupList } = useQuery({
+    queryKey: ["roomList"],
+    queryFn: async () => {
+      try {
+        const res = await api.get("/rooms/?q=group")
+        return res.data ?? []
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  })
+
+  // const wsUrl = `${BASE_SOCKET_URL}/chat/?token=${token}`;
+  // const response = await fetch(`${BASE_URL}/api/rooms/${inbox.id}/messages/`)
 
   console.log("chatList", chatList)
   console.log("onlineUsers", onlineUsers)
+  console.log("roomList", roomList)
+  console.log("groupList", groupList)
   return (
     <AppScreen isEnableLinearGradient animateOnFocus>
       {/* Header */}

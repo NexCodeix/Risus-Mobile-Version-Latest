@@ -25,55 +25,71 @@ type ForgotPasswordPayload = {
 /* ================= HOOK ================= */
 
 export const useAuth = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   /* ================= LOGIN ================= */
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginPayload) => {
-      const res = await api.post("/user/obtain-token/", data);
-      return res.data;
+      const res = await api.post('/user/obtain-token/', data)
+      return res.data
     },
     onSuccess: (data) => {
-      setToken(data.key);
-    },
-  });
+      setToken(data.key)
+    }
+  })
 
   /* ================= SIGNUP ================= */
 
   const signupMutation = useMutation({
     mutationFn: async (data: SignupPayload) => {
-      const res = await api.post("/user/user-register/", data);
-      return res.data;
+      const res = await api.post('/user/user-register/', data)
+      return res.data
     },
     onSuccess: (data) => {
       // If backend returns token after signup
       if (data.key) {
-        setToken(data.key);
+        setToken(data.key)
       }
-    },
-  });
+    }
+  })
 
+  /* ================= Google Login ================= */
+  const googleLoginMutation = useMutation({
+    mutationFn: async () => {
+      const res = await api.post('user/google-login/')
+      return res.data
+    },
+    onSuccess: (data) => {
+      if (data.access_token) {
+        setToken(data.access_token)
+      } else {
+        console.log('Token not found on google login')
+      }
+    }
+  })
   /* ================= FORGOT PASSWORD ================= */
 
   const forgotPasswordMutation = useMutation({
     mutationFn: async (data: ForgotPasswordPayload) => {
-      const res = await api.post("/user/forgot-password/", data);
-      return res.data;
-    },
-  });
+      const res = await api.post('/user/forgot-password/', data)
+      return res.data
+    }
+  })
 
   /* ================= LOGOUT ================= */
 
   const logout = async () => {
-    clearToken();
-    await queryClient.clear(); // clear cached user queries
-  };
+    clearToken()
+    await queryClient.clear() // clear cached user queries
+  }
 
   return {
     // login
     login: loginMutation.mutateAsync,
     isLoginLoading: loginMutation.isPending,
+    googleLogin: googleLoginMutation.mutateAsync,
+    isGoogleLoginLoading: googleLoginMutation.isPending,
 
     // signup
     signup: signupMutation.mutateAsync,
@@ -84,6 +100,6 @@ export const useAuth = () => {
     isForgotLoading: forgotPasswordMutation.isPending,
 
     // logout
-    logout,
-  };
+    logout
+  }
 };

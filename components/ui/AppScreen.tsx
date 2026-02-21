@@ -68,7 +68,6 @@ export default function AppScreen({
       }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={{flex: 1}}>
         {isEnableLinearGradient && (
           <LinearGradient
@@ -97,8 +96,7 @@ export default function AppScreen({
             {children}
           </View>
         </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+    </View>
   )
 }
 

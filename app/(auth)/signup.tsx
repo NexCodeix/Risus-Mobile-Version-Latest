@@ -124,7 +124,7 @@ export default function SignUp() {
                     Let&apos;s get started!
                   </Text>
 
-                  <View className="mb-5 flex-row gap-4">
+                  <View className="mb-5  gap-4">
                     <Controller
                       control={control}
                       name="first_name"
@@ -266,9 +266,9 @@ export default function SignUp() {
                   <TouchableOpacity className="flex-row items-center justify-center border border-slate-200 py-4 rounded-2xl bg-white/50">
                     <Image
                       source={{
-                        uri: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.png'
+                        uri: 'https://img.icons8.com/?size=100&id=V5cGWnc9R4xj&format=png&color=000000'
                       }}
-                      className="w-5 h-5 mr-3"
+                      className="size-6 mr-3"
                     />
                     <Text className="text-slate-700 font-bold">
                       Sign up with Google
