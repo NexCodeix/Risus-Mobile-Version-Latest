@@ -69,8 +69,8 @@ api.interceptors.response.use(
     log('🔴 API ERROR', error.config?.url, normalizedError)
 
     /**
-     👉 Force logout on unauthorized
-     */
+       👉 Force logout on unauthorized
+      */
     if (status === 401) {
       const logout = useAuthStore.getState().logout
     }

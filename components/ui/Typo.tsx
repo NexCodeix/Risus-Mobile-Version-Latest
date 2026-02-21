@@ -1,22 +1,29 @@
-import { TypoProps } from '@/types/common';
-import {clsx} from 'clsx';
-import { verticalScale } from '@/lib/styling';
-import { Text } from 'react-native';
+import {TypoProps} from '@/types/common'
+import {clsx} from 'clsx'
+import {verticalScale} from '@/lib/styling'
+import {Text} from 'react-native'
 
-const Typo = ({ size = 16, children, className, style, textProps }: TypoProps) => {
+const Typo = ({
+  size = 16,
+  children,
+  className,
+  style,
+  textProps
+}: TypoProps) => {
   return (
     <Text
       {...textProps}
-      className={clsx('', className)}
+      className={clsx('font-Poppins_Regular', className)}
       style={[
         {
-          fontSize: verticalScale(size),
+          fontSize: verticalScale(size)
         },
-        style,
-      ]}>
+        style
+      ]}
+    >
       {children}
     </Text>
-  );
-};
+  )
+}
 
-export default Typo;
+export default Typo

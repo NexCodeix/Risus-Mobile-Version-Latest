@@ -1,20 +1,20 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { BlurView } from 'expo-blur'
-import { LinearGradient } from 'expo-linear-gradient'
-import { router } from 'expo-router'
-import React, { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {BlurView} from 'expo-blur'
+import {LinearGradient} from 'expo-linear-gradient'
+import {router} from 'expo-router'
+import React, {useState} from 'react'
+import {Controller, useForm} from 'react-hook-form'
+import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native'
+import Animated, {FadeInDown} from 'react-native-reanimated'
 
 // Logic Imports
 import AppKeyboardAvoidingView from '@/components/ui/AppKeyboardAvoidingView'
 import AppScreen from '@/components/ui/AppScreen'
-import { AppToast } from '@/components/ui/AppToast'
+import {AppToast} from '@/components/ui/AppToast'
 import BackButton from '@/components/ui/BackButton'
 import Input from '@/components/ui/Input'
-import { useAuth } from '@/hooks/useAuth'
-import { SignUpForm, SignUpSchema } from '@/validate/auth'
+import {useAuth} from '@/hooks/useAuth'
+import {SignUpForm, SignUpSchema} from '@/validate/auth'
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
@@ -97,8 +97,8 @@ export default function SignUp() {
               className="items-center mt-3 mb-4"
             >
               <Image
-                source={require('@/assets/main-header-logo.png')}
-                style={{width: 140, height: 50, resizeMode: 'contain'}}
+                source={require('@/assets/main-header-logo1.png')}
+                style={{width: 150, height: 70, resizeMode: 'contain'}}
               />
             </Animated.View>
 

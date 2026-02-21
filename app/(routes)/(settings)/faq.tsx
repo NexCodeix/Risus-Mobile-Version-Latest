@@ -1,48 +1,53 @@
-import AppScreen from '@/components/ui/AppScreen';
-import { router } from 'expo-router';
-import { ChevronDown, ChevronLeft, ChevronUp } from 'lucide-react-native';
-import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import AppScreen from '@/components/ui/AppScreen'
+import {router} from 'expo-router'
+import {ChevronDown, ChevronLeft, ChevronUp} from 'lucide-react-native'
+import React, {useState} from 'react'
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native'
 
 // 1. FAQ Data Array
 const faqData = [
   {
     id: 1,
-    question: "What is Risus?",
-    answer: "Risus is a platform designed to provide seamless experiences for our users through innovative features."
+    question: 'What is Risus?',
+    answer:
+      'Risus is a platform designed to provide seamless experiences for our users through innovative features.'
   },
   {
     id: 2,
-    question: "How does Risus work?",
-    answer: "Risus works by connecting you with various services directly through our intuitive mobile interface."
+    question: 'How does Risus work?',
+    answer:
+      'Risus works by connecting you with various services directly through our intuitive mobile interface.'
   },
   {
     id: 3,
-    question: "How do I reset my password?",
-    answer: "You can reset your password by going to the Profile settings and clicking on 'Security' then 'Reset Password'."
+    question: 'How do I reset my password?',
+    answer:
+      "You can reset your password by going to the Profile settings and clicking on 'Security' then 'Reset Password'."
   },
   {
     id: 4,
-    question: "How do rewards work?",
-    answer: "You earn reward points for every activity you complete, which can be redeemed for exclusive benefits."
+    question: 'How do rewards work?',
+    answer:
+      'You earn reward points for every activity you complete, which can be redeemed for exclusive benefits.'
   },
   {
     id: 5,
-    question: "The app is not working properly. What should I do?",
-    answer: "Try clearing your app cache or restarting the application. If the issue persists, contact support."
-  },
-];
+    question: 'The app is not working properly. What should I do?',
+    answer:
+      'Try clearing your app cache or restarting the application. If the issue persists, contact support.'
+  }
+]
 
 const FAQScreen = () => {
   // State to track which item is expanded
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null)
 
   const toggleAccordion = (id: number) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
+    setExpandedId(expandedId === id ? null : id)
+  }
 
   return (
-    <AppScreen animateOnFocus isEnableLinearGradient>
+    <AppScreen isEnableLinearGradient animateOnFocus >
       {/* Header Section */}
       <View className="pt-3 pb-2">
         <TouchableOpacity onPress={() => router.back()} className="mb-8">
@@ -57,7 +62,7 @@ const FAQScreen = () => {
       {/* FAQ List */}
       <ScrollView className="px-6" showsVerticalScrollIndicator={false}>
         {faqData.map((item) => {
-          const isExpanded = expandedId === item.id;
+          const isExpanded = expandedId === item.id
 
           return (
             <View key={item.id} className="mb-8">
@@ -85,11 +90,11 @@ const FAQScreen = () => {
                 </View>
               )}
             </View>
-            );
-          })}
+          )
+        })}
       </ScrollView>
     </AppScreen>
-  );
-};
+  )
+}
 
-export default FAQScreen;
+export default FAQScreen

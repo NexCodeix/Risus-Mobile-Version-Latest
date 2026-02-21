@@ -2,14 +2,14 @@ import {Text, View} from 'react-native'
 import React from 'react'
 import AppScreen from '@/components/ui/AppScreen'
 
-const VisitProfile = () => {
+const search = () => {
   return (
-    <AppScreen isEnableLinearGradient animateOnFocus removeHorizontalPadding>
+    <AppScreen isEnableLinearGradient animateOnFocus>
       <View>
-        <Text>VisitProfile</Text>
+        <Text>search</Text>
       </View>
     </AppScreen>
   )
 }
 
-export default VisitProfile
+export default search
