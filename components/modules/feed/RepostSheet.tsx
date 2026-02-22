@@ -379,7 +379,7 @@ function EmptyState() {
       entering={FadeInDown.springify().damping(14)}
       className="flex-1 items-center justify-center pt-20 px-8"
     >
-      <View className="w-20 h-20 rounded-full bg-gray-200 items-center justify-center mb-5">
+      <View className="w-20 h-20 rounded-full bg-blue- items-center justify-center mb-5">
         <Ionicons name="megaphone-outline" size={44} color="#9CA3AF" />
       </View>
       <Text className="text-gray-900 text-xl font-extrabold mb-1.5">
@@ -403,7 +403,7 @@ interface RepostSheetProps {
 
 export function RepostSheet({isOpen, onClose, post}: RepostSheetProps) {
   const bottomSheetRef = useRef<BottomSheetModal>(null)
-  const snapPoints = useMemo(() => ['92%', '98%'], [])
+  const snapPoints = useMemo(() => ['92%', '95%'], [])
 
   const threadId = post?.thread?.toString() || post?.id?.toString() || null
 
@@ -453,10 +453,10 @@ export function RepostSheet({isOpen, onClose, post}: RepostSheetProps) {
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       enablePanDownToClose
-      backgroundStyle={{backgroundColor: '#F3F4F6', borderRadius: 32}}
-      handleIndicatorStyle={{backgroundColor: '#D1D5DB', width: 48}}
+      backgroundStyle={{borderRadius: 32}}
+      handleIndicatorStyle={{backgroundColor: '#eff6ff', width: 48}}
     >
-      <View className="flex-1 bg-gray-100">
+      <View className="flex-1 bg-blue-50">
         {/* ── Header ── */}
         <View className="flex-row items-center justify-between px-4 pt-1.5 pb-3">
           {/* Back button */}
