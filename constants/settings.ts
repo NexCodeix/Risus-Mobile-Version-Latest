@@ -45,14 +45,14 @@ export const ACCOUNT_ITEMS: SettingItem[] = [
     iconProps: {size: 20, color: ICON_COLORS.primary},
     title: 'RUSD Balance',
     subtitle: 'View your current RUSD holdings',
-    onPress: navigateTo('/(routes)/coming-soon')
+    onPress: navigateTo('/coming-soon')
   },
   {
     Icon: Wallet,
     iconProps: {size: 20, color: ICON_COLORS.primary},
     title: 'RISUS Balance',
     subtitle: 'View your current RISUS holdings',
-    onPress: navigateTo('/(routes)/coming-soon')
+    onPress: navigateTo('/coming-soon')
   }
 ]
 
@@ -63,21 +63,21 @@ export const PROMOTIONS_ITEMS: SettingItem[] = [
     iconProps: {size: 20, color: ICON_COLORS.primary},
     title: 'Influencer Partnerships',
     subtitle: 'Collaborate with creators to promote your brand',
-    onPress: navigateTo('/(routes)/coming-soon')
+    onPress: navigateTo('/coming-soon')
   },
   {
     Icon: BarChart2,
     iconProps: {size: 20, color: ICON_COLORS.primary},
     title: 'Monetize Pings',
     subtitle: 'Earn from Ping and boost engagement automatically',
-    onPress: navigateTo('/(routes)/coming-soon')
+    onPress: navigateTo('/coming-soon')
   },
   {
     Icon: Rocket,
     iconProps: {size: 20, color: ICON_COLORS.primary},
     title: 'Post Promotion',
     subtitle: 'Promote posts and reach a wider audience fast',
-    onPress: navigateTo('/(routes)/coming-soon')
+    onPress: navigateTo('/coming-soon')
   }
 ]
 
@@ -86,23 +86,26 @@ export const GENERAL_ITEMS: SettingItem[] = [
   {
     Icon: Bookmark,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'Bookmarks'
+    title: 'Bookmarks',
+    onPress: navigateTo('/bookmarks')
   },
   {
     Icon: Bell,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'Notifications'
+    title: 'Notifications',
+     onPress: navigateTo('/notification')
   },
   {
     Icon: PieChart,
     iconProps: {size: 20, color: ICON_COLORS.primary},
     title: 'Analytics',
-    onPress: navigateTo('/(routes)/coming-soon')
+    onPress: navigateTo('/coming-soon')
   },
   {
     Icon: HelpCircle,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'FAQ'
+    title: 'FAQ',
+    onPress : navigateTo('/faq')
   },
   {
     Icon: FileText,
@@ -112,7 +115,8 @@ export const GENERAL_ITEMS: SettingItem[] = [
   {
     Icon: Info,
     iconProps: {size: 20, color: ICON_COLORS.primary},
-    title: 'About App'
+    title: 'About App',
+     onPress: navigateTo('/about-app')
   }
 ]
 

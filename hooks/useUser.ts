@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
-import { getToken } from "@/utils/storage";
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
+import {api} from '@/lib/axios'
+import {getToken} from '@/utils/storage'
 import {User} from '@/types/user.types'
 
 /* ================= HOOK ================= */

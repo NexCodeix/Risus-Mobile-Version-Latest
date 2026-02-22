@@ -3,7 +3,7 @@ import { View, ImageStyle } from 'react-native';
 import { Image, ImageSource } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { clsx } from 'clsx';
-import Typo from './Typo'; // Assuming Typo is available for fallback text if needed
+import Typo from './Typo';
 
 type AvatarProps = {
   source?: ImageSource | string | null;
@@ -22,24 +22,25 @@ const Avatar: React.FC<AvatarProps> = ({
   source,
   size = 40,
   borderRadius,
-  borderColor = '#E0F2F7', // Default border color (border from theme)
+  borderColor = '#E0F2F7',
   borderWidth = 0,
   className,
   fallbackIcon = 'person',
   fallbackText,
-  fallbackTextColor = '#1F2937', // text-primary from theme
-  fallbackBackgroundColor = '#E0F2F7', // border from theme
+  fallbackTextColor = '#1F2937',
+  fallbackBackgroundColor = '#E0F2F7',
 }) => {
   const avatarStyle: ImageStyle = {
     width: size,
     height: size,
-    borderRadius: borderRadius !== undefined ? borderRadius : size / 2, // Default to circle
+    borderRadius: borderRadius !== undefined ? borderRadius : size / 2,
     borderColor: borderColor,
     borderWidth: borderWidth,
     overflow: 'hidden',
   };
 
-  const hasImage = source !== null && source !== undefined && (typeof source === 'string' ? source.length > 0 : true);
+  const [hasError, setHasError] = React.useState(false);
+  const hasImage = !hasError && source !== null && source !== undefined && (typeof source === 'string' ? source.length > 0 : true);
 
   return (
     <View className={clsx(className)} style={avatarStyle}>
@@ -48,6 +49,7 @@ const Avatar: React.FC<AvatarProps> = ({
           source={typeof source === 'string' ? { uri: source } : source}
           style={{ width: '100%', height: '100%' }}
           contentFit="cover"
+          onError={() => setHasError(true)}
         />
       ) : (
         <View
