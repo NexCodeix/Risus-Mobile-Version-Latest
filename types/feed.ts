@@ -1,10 +1,10 @@
 /**
  * Feed Types
- * Type definitions for the feed system
+ * Type definitions matching the actual API response
  */
 
 export interface User {
-  id: string
+  user_id: number
   email: string
   username: string
   display_name?: string
@@ -14,18 +14,18 @@ export interface User {
 }
 
 export interface MediaItem {
-  id: string
+  id: number
   file: string
   file_type: 'image' | 'video'
   thumbnail?: string
 }
 
 export interface Post {
-  id: string
+  id: number
   user: User
   content: string
   images: MediaItem[]
-  thread?: string
+  thread?: number | string // API sends number, hooks might use string
   title?: string
   is_liked: boolean
   is_repost: boolean
@@ -33,10 +33,11 @@ export interface Post {
   total_comments: number
   total_reposts: number
   date_created: string
-}
-
-export interface RepostData {
-  [threadId: string]: Post[]
+  is_bookmarked?: boolean
+  is_draft?: boolean
+  is_highlight?: boolean
+  enable_comment?: boolean
+  enable_community?: boolean
 }
 
 export interface FeedResponse {

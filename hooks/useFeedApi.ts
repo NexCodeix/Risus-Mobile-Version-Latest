@@ -30,7 +30,7 @@ export function useFeed() {
       const url = new URL(lastPage.next)
       return url.searchParams.get('page')
     },
-    initialPageParam: 1,
+    initialPageParam: "1",
     select: (data) => ({
       pages: data.pages.map((page) => ({
         ...page,
@@ -83,7 +83,7 @@ export function useReposts(threadId: string | null, enabled = false) {
       const filteredResults = response.data.results.filter(
         (repost) => repost.is_repost === true
       )
-
+console.log("filter result repost data", filteredResults);
       return {
         ...response.data,
         results: filteredResults
@@ -94,7 +94,7 @@ export function useReposts(threadId: string | null, enabled = false) {
       const url = new URL(lastPage.next)
       return url.searchParams.get('page')
     },
-    initialPageParam: 1,
+    initialPageParam: "1",
     enabled: !!threadId && enabled
   })
 }

@@ -1,233 +1,406 @@
-
-
-import { OptimizedImage } from '@/components/ui/OptimizedImage'
-import { OptimizedVideo } from '@/components/ui/OptimizedVideo'
-import { useLikePost } from '@/hooks/useFeedApi'
-import { Post } from '@/types/feed'
-import { Ionicons } from '@expo/vector-icons'
-import { useState } from 'react'
+import {useLikePost} from '@/hooks/useFeedApi'
+import {MediaItem, Post} from '@/types/feed'
+import {smartTime} from '@/utils/Time'
+import {Ionicons} from '@expo/vector-icons'
+import {clsx} from 'clsx'
+import {BlurView} from 'expo-blur'
+import {Image} from 'expo-image'
+import {LinearGradient} from 'expo-linear-gradient'
+import {useVideoPlayer, VideoView} from 'expo-video'
+import React, {useEffect, useState} from 'react'
 import {
-    Dimensions,
-    Image,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View
+  ActivityIndicator,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native'
-import Animated, { FadeIn } from 'react-native-reanimated'
+import Animated, {
+  FadeIn,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring
+} from 'react-native-reanimated'
+import Avatar from '../../ui/Avatar'
 import Typo from '../../ui/Typo'
 
-const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window')
+const {width: SCREEN_WIDTH} = Dimensions.get('window')
+const CARD_WIDTH = SCREEN_WIDTH * 0.92
+const MEDIA_ASPECT_RATIO = 4 / 5
+const CARD_HEIGHT = CARD_WIDTH / MEDIA_ASPECT_RATIO
 
 interface FeedCardProps {
   post: Post
-  onRepostPress: () => void
+  onRepostPress?: () => void
+  isRepost?: boolean
 }
 
-export function FeedCard({post, onRepostPress}: FeedCardProps) {
-  console.log('Post Data:', JSON.stringify(post, null, 2))
+const MediaItemComponent = ({
+  item,
+  isVisible
+}: {
+  item: MediaItem
+  isVisible: boolean
+}) => {
+  const [hasError, setHasError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  if (hasError) {
+    return (
+      <LinearGradient
+        colors={['#3B82F6', '#1D4ED8']}
+        style={StyleSheet.absoluteFill}
+        className="items-center justify-center p-6"
+      >
+        <Ionicons
+          name="alert-circle-outline"
+          size={32}
+          color="white"
+          opacity={0.6}
+        />
+        <Typo size={12} className="text-white/60 text-center mt-2 font-medium">
+          Media unavailable
+        </Typo>
+        <TouchableOpacity
+          onPress={() => {
+            setHasError(false)
+            setIsLoading(true)
+          }}
+          className="mt-3 bg-white/10 px-4 py-2 rounded-full border border-white/20"
+        >
+          <Typo size={12} className="text-white font-bold">
+            Retry
+          </Typo>
+        </TouchableOpacity>
+      </LinearGradient>
+    )
+  }
+
+  return (
+    <View style={StyleSheet.absoluteFill}>
+      {item.file_type === 'video' ? (
+        <VideoPlayer
+          source={item.file}
+          isVisible={isVisible}
+          poster={item.thumbnail}
+          onLoadStart={() => setIsLoading(true)}
+          onLoad={() => setIsLoading(false)}
+          onError={() => {
+            setHasError(true)
+            setIsLoading(false)
+          }}
+        />
+      ) : (
+        <Image
+          source={{uri: item.file}}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          transition={200}
+          cachePolicy="memory-disk"
+          onLoadStart={() => setIsLoading(true)}
+          onLoad={() => setIsLoading(false)}
+          onError={() => {
+            setHasError(true)
+            setIsLoading(false)
+          }}
+        />
+      )}
+
+      {isLoading && (
+        <View
+          style={StyleSheet.absoluteFill}
+          className="bg-[#007AFF] items-center justify-center"
+        >
+          <ActivityIndicator size="small" color="#DFDFDF" />
+        </View>
+      )}
+    </View>
+  )
+}
+
+const VideoPlayer = ({
+  source,
+  isVisible,
+  poster,
+  onLoadStart,
+  onLoad,
+  onError
+}: {
+  source: string
+  isVisible: boolean
+  poster?: string
+  onLoadStart: () => void
+  onLoad: () => void
+  onError: () => void
+}) => {
+  const player = useVideoPlayer(source, (player) => {
+    player.loop = true
+    player.muted = true
+  })
+
+  useEffect(() => {
+    if (isVisible) {
+      player.play()
+    } else {
+      player.pause()
+    }
+  }, [isVisible, player])
+
+  useEffect(() => {
+    onLoadStart()
+    const subscription = player.addListener('statusChange', (status: any) => {
+      if (status === 'readyToPlay') onLoad()
+      if (status === 'error') onError()
+    })
+    return () => subscription.remove()
+  }, [player])
+
+  return (
+    <View style={StyleSheet.absoluteFill} className="bg-black">
+      <VideoView
+        player={player}
+        style={StyleSheet.absoluteFill}
+        contentFit="cover"
+        nativeControls={false}
+      />
+      {poster && !isVisible && (
+        <Image
+          source={{uri: poster}}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+        />
+      )}
+    </View>
+  )
+}
+
+export function FeedCard({
+  post,
+  onRepostPress,
+  isRepost = false
+}: FeedCardProps) {
   const {mutate: likePost} = useLikePost()
-  const [isLiked, setIsLiked] = useState(post.is_liked || false)
+  const [isLiked, setIsLiked] = useState(post.is_liked)
   const [likeCount, setLikeCount] = useState(post.total_likes)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0)
 
   const images = post.images || []
   const hasMedia = images.length > 0
-  const currentMedia = images[currentImageIndex]
+
+  const scale = useSharedValue(1)
 
   const handleLike = () => {
-    setIsLiked(!isLiked)
-    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
-    likePost(post.id)
+    const newLiked = !isLiked
+    setIsLiked(newLiked)
+    setLikeCount((prev) => (newLiked ? prev + 1 : prev - 1))
+    likePost(post.id.toString())
+
+    scale.value = withSpring(1.2, {}, () => {
+      scale.value = withSpring(1)
+    })
   }
 
-  const handleTap = (evt: any) => {
-    if (!hasMedia || images.length <= 1) return
+  const heartStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}]
+  }))
 
-    const pageX = evt.nativeEvent.pageX
-    const threshold = SCREEN_WIDTH / 2
-
-    if (pageX < threshold) {
-      // Tap left - previous image
-      setCurrentImageIndex((prev) => Math.max(0, prev - 1))
+  const handleMediaTap = (event: any) => {
+    if (images.length <= 1) return
+    const x = event.nativeEvent.locationX
+    if (x < CARD_WIDTH / 2) {
+      setCurrentMediaIndex((prev) => Math.max(0, prev - 1))
     } else {
-      // Tap right - next image
-      setCurrentImageIndex((prev) => Math.min(images.length - 1, prev + 1))
+      setCurrentMediaIndex((prev) => Math.min(images.length - 1, prev + 1))
     }
-  }
-
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60)
-    )
-
-    if (diffMinutes < 60) return `${diffMinutes}m ago`
-    if (diffMinutes < 1440) return `${Math.floor(diffMinutes / 60)}h ago`
-    return `${Math.floor(diffMinutes / 1440)}d ago`
   }
 
   return (
     <Animated.View
       entering={FadeIn}
-      className="bg-white rounded-3xl overflow-hidden shadow-lg"
+      className={clsx(
+        'rounded-[32px] overflow-hidden shadow-lg border border-white/20',
+        isRepost ? 'my-2' : ''
+      )}
       style={{
-        width: '90%',
-        height: SCREEN_HEIGHT * 0.58,
-        maxHeight: 600
+        width: CARD_WIDTH,
+        height: isRepost ? CARD_HEIGHT * 0.8 : CARD_HEIGHT // Back to original height
       }}
     >
-      {/* User Info Overlay - Top */}
-      <View className="absolute top-4 left-4 right-4 flex-row items-center justify-between z-10 pointer-events-none">
-        <View className="flex-row items-center bg-black/60 backdrop-blur rounded-full px-3 py-2 shadow-lg">
-          <Image
-            source={{
-              uri:
-                post.user.image ||
-                'https://via.placeholder.com/32/3B82F6/FFFFFF?text=U'
-            }}
-            className="w-8 h-8 rounded-full mr-2 border border-white/50"
-          />
-          <View>
-            <Text className="text-white font-semibold text-sm">
-              {post.user.display_name || post.user.username.split('-')[0]}
-            </Text>
-            <Text className="text-white/80 text-xs">
-              @{post.user.username.split('@')[0].split('-')[0]} •{' '}
-              {formatTime(post.date_created)}
-            </Text>
-          </View>
-        </View>
+      {/* Media & Content Section */}
+      <View style={{flex: 1, overflow: 'hidden', borderRadius: 32}}>
+        {/* Media Layer */}
+        <View style={StyleSheet.absoluteFill}>
+          {hasMedia ? (
+            <TouchableWithoutFeedback onPress={handleMediaTap}>
+              <View style={StyleSheet.absoluteFill}>
+                <MediaItemComponent
+                  item={images[currentMediaIndex]}
+                  isVisible={true}
+                />
 
-        {/* Image Counter */}
-        {images.length > 1 && (
-          <View className="bg-black/60 backdrop-blur rounded-full px-3 py-1.5 shadow-lg">
-            <Text className="text-white text-xs font-semibold">
-              {currentImageIndex + 1}/{images.length}
-            </Text>
-          </View>
-        )}
-      </View>
+                {/* Story-style Progress & Asset Counter Row */}
+                <View className="absolute top-4 left-0 right-0 flex-row items-center px-4 z-20">
+                  <View className="flex-row flex-1 gap-1 mr-3 ">
+                    {images.length > 0 ? (
+                      images.map((_, idx) => (
+                        <View
+                          key={idx}
+                          className={clsx(
+                            'h-[7px] flex-1 rounded-[10px] shadow-sm',
+                            idx === currentMediaIndex
+                              ? 'bg-white'
+                              : 'bg-white/40'
+                          )}
+                        />
+                      ))
+                    ) : (
+                      <View className="h-[4px] flex-1 rounded-[10px] bg-white shadow-sm" />
+                    )}
+                  </View>
 
-      {/* Media Indicator */}
-      {hasMedia && images.length > 1 && (
-        <View className="absolute top-16 left-0 right-0 flex-row justify-center items-center px-4 z-10 pointer-events-none">
-          {images.map((_, i) => (
-            <View
-              key={i}
-              className={`h-1 mx-0.5 rounded-full ${
-                i === currentImageIndex ? 'w-6 bg-white' : 'w-2 bg-white/40'
-              }`}
-            />
-          ))}
-        </View>
-      )}
-
-      {/* Media Content with Tap Navigation */}
-      {hasMedia && currentMedia?.file ? (
-        <TouchableWithoutFeedback onPress={handleTap}>
-          <View className="w-full h-full relative">
-            {currentMedia.file_type === 'video' ? (
-              <OptimizedVideo
-                key={currentMedia.id}
-                source={currentMedia.file}
-                poster={currentMedia.thumbnail}
-                contentFit="cover"
-                className="w-full h-full"
-                cachePolicy="memory-disk"
-                controls
-                autoPlay={false}
-                muted
-                resizeMode="cover"
-              />
-            ) : (
-              <OptimizedImage
-                key={currentMedia.id}
-                source={currentMedia.file}
-                contentFit="cover"
-                className="w-full h-full"
-                cachePolicy="memory-disk"
-                showSkeleton
-                transition={200}
-              />
-            )}
-
-            {/* Gradient Overlay for Better Text Visibility */}
-            <View className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
-          </View>
-        </TouchableWithoutFeedback>
-      ) : (
-        <View className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center">
-          <Ionicons name="images-outline" size={48} color="white" />
-          <Text className="text-white text-lg font-semibold mt-3">
-            No Media
-          </Text>
-        </View>
-      )}
-
-      {/* Content Overlay - Bottom */}
-      {post.content && (
-        <View className="absolute bottom-10 left-4 right-20   ">
-          <Typo size={16} className="text-white py-1 leading-5">
-            {post.title}
-          </Typo>
-          {post.content.length > 100 && (
-            <Text className="text-blue-300 text-xs mt-1 font-medium">
-              Read More
-            </Text>
+                  {/* Asset Counter Badge */}
+                  <View className="px-2 py-1">
+                    <Typo size={10} className="text-white font-bold">
+                      {images.length > 0
+                        ? `${currentMediaIndex + 1}/${images.length}`
+                        : '1/1'}
+                    </Typo>
+                  </View>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          ) : (
+            <LinearGradient
+              colors={['#3B82F6', '#1D4ED8']}
+              style={StyleSheet.absoluteFill}
+              className="items-center justify-center p-8"
+            >
+              {post.title && (
+                <Typo
+                  size={28}
+                  className="text-white font-bold text-center mb-4 leading-tight"
+                >
+                  {post.title}
+                </Typo>
+              )}
+              {/* <Typo size={16} className="text-white/80 text-center leading-6" textProps={{ numberOfLines: 5 }}>
+                {post.content}
+              </Typo> */}
+            </LinearGradient>
           )}
-        </View>
-      )}
 
-      {/* Action Buttons - Right Side */}
-      <View className="absolute bottom-20 right-4 gap-3 items-center">
-        {/* Like */}
-        <TouchableOpacity
-          onPress={handleLike}
-          className="items-center bg-black/50 backdrop-blur rounded-full p-3 shadow-lg"
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={isLiked ? 'heart' : 'heart-outline'}
-            size={28}
-            color={isLiked ? '#EF4444' : '#fff'}
+          {/* Gradient Overlay for Text Visibility */}
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {backgroundColor: 'rgba(0,0,0,0.1)'}
+            ]}
+            pointerEvents="none"
           />
-          <Text className="text-white text-xs font-bold mt-1">{likeCount}</Text>
-        </TouchableOpacity>
+        </View>
 
-        {/* Comment */}
-        <TouchableOpacity
-          className="items-center bg-black/50 backdrop-blur rounded-full p-3 shadow-lg"
-          activeOpacity={0.7}
-        >
-          <Ionicons name="chatbubble-outline" size={26} color="#fff" />
-          <Text className="text-white text-xs font-bold mt-1">
-            {post.total_comments}
-          </Text>
-        </TouchableOpacity>
+        {/* Header Overlay */}
+        <View className="absolute top-12 left-4 right-4 flex-row items-center justify-between z-10">
+          <BlurView
+            intensity={40}
+            tint="dark"
+            className="flex-row items-center px-3 py-2 rounded-full overflow-hidden border border-white/10"
+          >
+            <Avatar source={post.user.image} size={30} className="mr-2" />
+            <View>
+              <Typo size={14} className="text-white font-bold leading-none">
+                {post.user.display_name || post.user.username.split('@')[0]}
+              </Typo>
+              <Typo size={11} className="text-white/80 leading-none mt-0.5">
+                @{post.user.username.split('@')[0]} •{' '}
+                {smartTime(post.date_created)}
+              </Typo>
+            </View>
+          </BlurView>
 
-        {/* Repost */}
-        <TouchableOpacity
-          onPress={onRepostPress}
-          className="items-center bg-blue-500 rounded-full p-3.5 shadow-2xl"
-          activeOpacity={0.8}
-          style={{
-            shadowColor: '#3B82F6',
-            shadowOffset: {width: 0, height: 4},
-            shadowOpacity: 0.4,
-            shadowRadius: 8
-          }}
-        >
-          <Ionicons name="repeat-outline" size={26} color="#fff" />
-          <Text className="text-white text-xs font-bold mt-1">
-            {post.total_reposts}
-          </Text>
-        </TouchableOpacity>
+          {/* Three-dot ellipsis - Commented out as requested */}
+          {/* <TouchableOpacity>
+          <BlurView intensity={40} tint="dark" className="p-2 rounded-full overflow-hidden border border-white/10">
+            <Ionicons name="ellipsis-horizontal" size={18} color="white" />
+          </BlurView>
+        </TouchableOpacity> */}
+        </View>
+
+        {/* Content & Actions Overlay */}
+        <View className="absolute bottom-6 left-5 right-5 z-10">
+          <View className="flex-row items-end justify-between">
+            <View className="flex-1 mr-4">
+              {hasMedia && (
+                <>
+                  {post.title && (
+                    <Typo
+                      size={18}
+                      className="text-white font-bold mb-1 shadow-md"
+                    >
+                      {post.title}
+                    </Typo>
+                  )}
+                  <Typo
+                    size={14}
+                    className="text-white/90 leading-5 shadow-md"
+                    textProps={{numberOfLines: 2}}
+                  >
+                    {post.content}
+                  </Typo>
+                </>
+              )}
+            </View>
+
+            <View className="items-center">
+              <BlurView
+                intensity={40}
+                tint="dark"
+                className="rounded-full px-1.5 py-4 overflow-hidden border border-white/10 space-y-4 items-center"
+              >
+                {/* Like */}
+                <TouchableOpacity
+                  onPress={handleLike}
+                  className="items-center px-1"
+                >
+                  <Animated.View style={heartStyle}>
+                    <Ionicons
+                      name={isLiked ? 'heart' : 'heart-outline'}
+                      size={26}
+                      color={isLiked ? '#ff4b4b' : 'white'}
+                    />
+                  </Animated.View>
+                  <Typo size={11} className="text-white font-bold mt-1">
+                    {likeCount}
+                  </Typo>
+                </TouchableOpacity>
+
+                {/* Comment - Commented out as requested */}
+                {/* <TouchableOpacity className="items-center px-1">
+                <Ionicons name="chatbubble-outline" size={24} color="white" />
+                <Typo size={11} className="text-white font-bold mt-1">{post.total_comments}</Typo>
+              </TouchableOpacity> */}
+
+                {/* Share/Repost Count - Commented out as requested */}
+                {/* <TouchableOpacity className="items-center px-1">
+                <Ionicons name="paper-plane-outline" size={24} color="white" />
+                <Typo size={11} className="text-white font-bold mt-1">{post.total_reposts}</Typo>
+              </TouchableOpacity> */}
+              </BlurView>
+
+              {/* Repost Button */}
+              {onRepostPress && (
+                <TouchableOpacity
+                  onPress={onRepostPress}
+                  className="bg-[#007AFF] p-3 rounded-full shadow-lg mt-3"
+                >
+                  <Ionicons name="repeat" size={22} color="white" />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </View>
       </View>
-
-      {/* Bottom Gradient for Card Separation */}
-      <View className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-blue-50/50 to-transparent pointer-events-none" />
     </Animated.View>
   )
 }

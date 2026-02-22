@@ -1,9 +1,10 @@
 import { useCurrentUser, useNotifications } from '@/hooks/useFeedApi'
 import { router } from 'expo-router'
-import { Bell, Compass, Flame, Search, WandSparkles } from 'lucide-react-native'
+import { Bell, Compass, Flame, Search, Sparkles } from 'lucide-react-native'
 import { useState } from 'react'
 import { Dimensions, Image, TouchableOpacity, View } from 'react-native'
 import Typo from '../../ui/Typo'
+import Avatar from '../../ui/Avatar'
 
 const {width} = Dimensions.get('window')
 
@@ -18,13 +19,13 @@ export function FeedHeader() {
   const unreadCount = notifications?.filter((n: any) => !n.is_read).length || 0
 
   return (
-    <View className="mb-4 ">
+    <View className="">
       {/*  Top Row  */}
       <View className="relative flex-row items-center justify-between px-4 py-3">
         {/* Left - Bell */}
         <TouchableOpacity
           onPress={() => router.push('/notification')}
-          className="relative p-2 rounded-full bg-white"
+          className="relative p-2 rounded-full bg-white shadow-sm"
           activeOpacity={0.7}
         >
           <Bell size={22} color="black" />
@@ -42,7 +43,7 @@ export function FeedHeader() {
         <View
           style={{
             position: 'absolute',
-            left: width / 2 - 65 // half of logo width (96px / 2)
+            left: width / 2 - 48
           }}
         >
           <Image
@@ -66,13 +67,9 @@ export function FeedHeader() {
             onPress={() => router.push('/profile')}
             activeOpacity={0.8}
           >
-            <Image
-              source={{
-                uri:
-                  user?.image ||
-                  'https://via.placeholder.com/32/3B82F6/FFFFFF?text=U'
-              }}
-              className="w-11 h-11 rounded-full"
+            <Avatar 
+              source={user?.image} 
+              size={44}
             />
           </TouchableOpacity>
         </View>
@@ -88,15 +85,12 @@ export function FeedHeader() {
           }`}
           activeOpacity={0.7}
         >
-          <WandSparkles
-            size={18}
-            color={activeTab === 'forYou' ? '#0167CC' : '#6B7280'}
-          />
+          <Sparkles size={18} color={activeTab === 'forYou' ? '#0167CC' : '#9CA3AF'} />
           <View className="ml-2">
             <Typo
               size={15}
-              className={`text-sm ${
-                activeTab === 'forYou' ? 'text-[#0167CC]' : 'text-gray-600'
+              className={`text-sm font-bold ${
+                activeTab === 'forYou' ? 'text-[#0167CC]' : 'text-gray-400'
               }`}
             >
               For you
@@ -112,15 +106,12 @@ export function FeedHeader() {
           }`}
           activeOpacity={0.7}
         >
-          <Compass
-            size={18}
-            color={activeTab === 'explore' ? '#0167CC' : '#6B7280'}
-          />
+          <Compass size={18} color={activeTab === 'explore' ? '#0167CC' : '#9CA3AF'} />
           <View className="ml-2">
             <Typo
               size={15}
-              className={`text-sm ${
-                activeTab === 'explore' ? 'text-[#0167CC]' : 'text-gray-600'
+              className={`text-sm font-bold ${
+                activeTab === 'explore' ? 'text-[#0167CC]' : 'text-gray-400'
               }`}
             >
               Explore
@@ -136,15 +127,12 @@ export function FeedHeader() {
           }`}
           activeOpacity={0.7}
         >
-          <Flame
-            size={18}
-            color={activeTab === 'trending' ? '#0167CC' : '#6B7280'}
-          />
+          <Flame size={18} color={activeTab === 'trending' ? '#0167CC' : '#9CA3AF'} />
           <View className="ml-2">
             <Typo
               size={15}
-              className={`text-sm ${
-                activeTab === 'trending' ? 'text-[#0167CC]' : 'text-gray-600'
+              className={`text-sm font-bold ${
+                activeTab === 'trending' ? 'text-[#0167CC]' : 'text-gray-400'
               }`}
             >
               Trending
@@ -155,3 +143,4 @@ export function FeedHeader() {
     </View>
   )
 }
+
